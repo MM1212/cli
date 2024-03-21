@@ -6,7 +6,7 @@
 /*   By: martiper <martiper@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 12:17:05 by martiper          #+#    #+#             */
-/*   Updated: 2024/03/21 12:57:09 by martiper         ###   ########.fr       */
+/*   Updated: 2024/03/21 17:26:00 by martiper         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,6 @@
 
 t_cli_option_builder	*cli_opt_builder_init(t_cli_handle *handle)
 {
-	this->reset();
-	this->_option._handle = handle;
 	this->set_type = cli_opt_builder_set_type;
 	this->set_flags = cli_opt_builder_set_flags;
 	this->add_flags = cli_opt_builder_add_flags;
@@ -35,6 +33,8 @@ t_cli_option_builder	*cli_opt_builder_init(t_cli_handle *handle)
 	this->is_valid = cli_opt_builder_is_valid;
 	this->reset = cli_opt_builder_reset;
 	this->end = cli_opt_builder_end;
+	this->reset();
+	this->_option._handle = handle;
 
 	this->set_type(CLI_OPTION_INPUT)
 		->add_flags(CLI_OPTION_FLAG_OPTIONAL);
@@ -44,8 +44,11 @@ t_cli_option_builder	*cli_opt_builder_init(t_cli_handle *handle)
 t_cli_option			*cli_opt_builder_end(void)
 {
 	if (!this->is_valid())
+	{
+		this->reset();
 		return (NULL);
-	uint32_t		new_len = this->_option._flags_size + 1;
+	}
+	uint32_t		new_len = this->_option._handle->options_size + 1;
 	t_cli_option	*new_options = ft_calloc(new_len, sizeof(t_cli_option));
 	ft_memmove(
 		new_options,
@@ -57,14 +60,15 @@ t_cli_option			*cli_opt_builder_end(void)
 	this->_option._handle->options_size = new_len;
 	this->_option._handle->options[new_len - 1] = this->_option;
 	ft_bzero(&this->_option, sizeof(t_cli_option));
-	this->reset();
-	return (&this->_option._handle->options[new_len - 1]);
+	return (&new_options[new_len - 1]);
 }
 
 t_cli_option_builder	*cli_opt_builder_reset(void)
 {
+	t_cli_handle *handle = this->_option._handle;
 	cli_cleanup_option(&this->_option);
 	ft_bzero(&this->_option, sizeof(t_cli_option));
+	this->_option._handle = handle;
 	return (this);
 }
 
@@ -165,12 +169,12 @@ t_cli_option_builder	*cli_opt_builder_add_flag(char *name)
 bool	cli_opt_builder_is_valid(void)
 {
 	if (!this->_option.slug)
-		this->_option._handle->set_error(CLI_ERROR_INVALID_OPTION, "Missing slug");
+		this->_option._handle->set_error(CLI_ERROR_BUILDER_INVALID_OPTION, "Missing slug", false);
 	else if (this->_option.type == CLI_OPTION_SELECT && !this->_option.choices)
-		this->_option._handle->set_error(CLI_ERROR_INVALID_OPTION, "Missing choices");
+		this->_option._handle->set_error(CLI_ERROR_BUILDER_INVALID_OPTION, "Missing choices", false);
 	else if (!this->_option._switches && !this->_option._flags)
-		this->_option._handle->set_error(CLI_ERROR_INVALID_OPTION, "Missing switches or flags");
+		this->_option._handle->set_error(CLI_ERROR_BUILDER_INVALID_OPTION, "Missing switches or flags", false);
 	else if (!this->_option.description)
-		this->_option._handle->set_error(CLI_ERROR_INVALID_OPTION, "Missing description");
+		this->_option._handle->set_error(CLI_ERROR_BUILDER_INVALID_OPTION, "Missing description", false);
 	return (this->_option._handle->valid);
 }

@@ -6,7 +6,7 @@
 /*   By: martiper <martiper@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 11:39:03 by martiper          #+#    #+#             */
-/*   Updated: 2024/03/21 12:50:06 by martiper         ###   ########.fr       */
+/*   Updated: 2024/03/21 17:13:58 by martiper         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,11 +54,18 @@ enum e_cli_option_flag
 enum e_cli_error_code
 {
 	CLI_ERROR_NONE = 0,
+	CLI_ERROR_BUILDER_INVALID_OPTION,
 	CLI_ERROR_INVALID_OPTION,
 	CLI_ERROR_MISSING_ARGUMENT,
 	CLI_ERROR_INVALID_ARGUMENT,
 	CLI_ERROR_UNKNOWN
 };
+
+#define CLI_ERROR_MSG_BUILDER_INVALID_OPTION	"Invalid option while building"
+#define CLI_ERROR_MSG_INVALID_OPTION	"Invalid option"
+#define CLI_ERROR_MSG_MISSING_ARGUMENT	"Missing argument"
+#define CLI_ERROR_MSG_INVALID_ARGUMENT	"Invalid argument"
+#define CLI_ERROR_MSG_UNKNOWN			"Unknown error"
 
 struct s_cli_option
 {
@@ -92,7 +99,7 @@ struct s_cli_option_builder
 	t_cli_option_builder*	(*add_choice)(char *choice); // will also call set_type(CLI_OPTION_SELECT)
 	t_cli_option_builder*	(*add_switch)(char letter);
 	t_cli_option_builder*	(*add_flag)(char *name);
-	t_cli_option			(*end)(void);
+	t_cli_option*			(*end)(void);
 	t_cli_option_builder*	(*reset)(void);
 	bool					(*is_valid)(void);
 
@@ -109,21 +116,21 @@ struct s_cli_handle
 	char					**args;
 	bool					valid;
 	t_cli_error_code		error_code;
-	char					*error_message;
+	char					*error_message; // must be heap allocated
 
 	// internal api
 	void					(*print)(void);
-	void					(*set_error)(t_cli_error_code code, char *message);
+	void					(*set_error)(t_cli_error_code code, const char *message, bool heap);
 
 	// public api
 	bool					(*parse)(int argc, char **argv);
-	bool					(*is_present)(char *name);
-	char					*(*get_value)(char *name);
-	t_cli_option			*(*get_option)(char *name);
+	bool					(*is_present)(const char *name);
+	char					*(*get_value)(const char *name);
+	t_cli_option			*(*get_option)(const char *name);
 	void					(*free)(void);
 	bool					(*is_valid)(void);
-	int						(*ouput_error)(void); // outputs error message to stderr and returns error code
-	t_cli_option_builder*	(*new_option)(char *slug, char *description);
+	int						(*output_error)(void); // outputs error message to stderr and returns error code
+	t_cli_option_builder*	(*new_option)(const char *slug, const char *description);
 };
 
 #endif

@@ -1,22 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cli.h                                              :+:      :+:    :+:   */
+/*   runtime.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: martiper <martiper@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/21 11:37:34 by martiper          #+#    #+#             */
-/*   Updated: 2024/03/21 16:11:29 by martiper         ###   ########.fr       */
+/*   Created: 2024/03/21 16:42:51 by martiper          #+#    #+#             */
+/*   Updated: 2024/03/21 16:44:54 by martiper         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-// PUBLIC API
+#ifndef RUNTIME_H
+# define RUNTIME_H
 
-#ifndef CLI_H
-# define CLI_H
+#include <defs.h>
+#include <stddef.h>
 
-#include "defs.h"
+typedef struct s_cli_runtime	t_cli_runtime;
 
-t_cli_handle	*cli_begin(void);
+struct s_cli_runtime
+{
+	int		argc;
+	char	**argv;
+	bool	on_switch;
+	bool	on_flag;
+};
 
-#endif
+# endif

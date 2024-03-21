@@ -2,9 +2,10 @@
 PROJECT_NAME = CLI
 
 ARCH_DIR = bin
-NAME =	$(addprefix $(ARCH_DIR)/, cli.a)
+NAME =	$(addprefix $(ARCH_DIR)/, libcli.a)
 
-SRC_FILES = accumulators.c option/builder/api.c command.c
+SRC_FILES = accumulators.c option/builder/api.c option/flag.c \
+			option/utils.c api.c command.c
 
 SRC_DIR = src
 
@@ -92,5 +93,10 @@ watch:
 		inotifywait -qre close_write --exclude ".*\.d" $(SRCS) $(INCLUDES); \
 		echo "$(TAG) $(YELLOW)recompiling$(RESET).."; \
 	done
+
+test: all
+	@$(CC) $(CFLAGS) -o test tests/main.c -Lbin -L$(LIBFT_BIN) -lcli -lft -fsanitize=address -g
+	@./test
+	@rm -f test
 
 .PHONY: all clean fclean re
