@@ -6,7 +6,7 @@
 /*   By: martiper <martiper@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 12:17:05 by martiper          #+#    #+#             */
-/*   Updated: 2024/03/21 17:26:00 by martiper         ###   ########.fr       */
+/*   Updated: 2024/03/22 15:30:06 by martiper         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,7 @@ t_cli_option_builder	*cli_opt_builder_init(t_cli_handle *handle)
 	this->reset();
 	this->_option._handle = handle;
 
-	this->set_type(CLI_OPTION_INPUT)
-		->add_flags(CLI_OPTION_FLAG_OPTIONAL);
+	this->add_flags(CLI_OPTION_FLAG_NONE);
 	return (this);
 }
 
@@ -124,9 +123,9 @@ t_cli_option_builder	*cli_opt_builder_add_choice(char *choice)
 	if (this->_option.type != CLI_OPTION_SELECT)
 		this->set_type(CLI_OPTION_SELECT);
 	char* choices = ft_strjoin_sep2("\1", this->_option.choices);
-	if (!choices)
+	if (!choices && this->_option.choices)
 		return (NULL);
-	char *tmp = ft_strjoin_sep("\1", choices, choice);
+	char *tmp = ft_strjoin_sep("\1", choices ? choices : "", choice, NULL);
 	free(choices);
 	if (!tmp)
 		return (NULL);
@@ -169,12 +168,12 @@ t_cli_option_builder	*cli_opt_builder_add_flag(char *name)
 bool	cli_opt_builder_is_valid(void)
 {
 	if (!this->_option.slug)
-		this->_option._handle->set_error(CLI_ERROR_BUILDER_INVALID_OPTION, "Missing slug", false);
+		this->_option._handle->set_error(CLI_ERROR_BUILDER_INVALID_OPTION, "Missing slug");
 	else if (this->_option.type == CLI_OPTION_SELECT && !this->_option.choices)
-		this->_option._handle->set_error(CLI_ERROR_BUILDER_INVALID_OPTION, "Missing choices", false);
+		this->_option._handle->set_error(CLI_ERROR_BUILDER_INVALID_OPTION, "Missing choices");
 	else if (!this->_option._switches && !this->_option._flags)
-		this->_option._handle->set_error(CLI_ERROR_BUILDER_INVALID_OPTION, "Missing switches or flags", false);
+		this->_option._handle->set_error(CLI_ERROR_BUILDER_INVALID_OPTION, "Missing switches or flags");
 	else if (!this->_option.description)
-		this->_option._handle->set_error(CLI_ERROR_BUILDER_INVALID_OPTION, "Missing description", false);
+		this->_option._handle->set_error(CLI_ERROR_BUILDER_INVALID_OPTION, "Missing description");
 	return (this->_option._handle->valid);
 }

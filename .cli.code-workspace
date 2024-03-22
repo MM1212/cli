@@ -82,7 +82,8 @@
 		"thread": "c",
 		"cinttypes": "c",
 		"cstdbool": "c",
-		"typeinfo": "c"
+		"typeinfo": "c",
+		"ft_printf.h": "c"
 	},
     "files.exclude": {
       "**/*.o": false,

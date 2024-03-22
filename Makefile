@@ -5,7 +5,7 @@ ARCH_DIR = bin
 NAME =	$(addprefix $(ARCH_DIR)/, libcli.a)
 
 SRC_FILES = accumulators.c option/builder/api.c option/flag.c \
-			option/utils.c api.c command.c
+			option/utils.c api.c command.c parser.c
 
 SRC_DIR = src
 
@@ -29,7 +29,7 @@ CFLAGS = \
 		$(INCLUDES) \
 		-MT $@ -MMD -MP -MF $(DEP_DIR)/$*.d \
 		-Wall -Wextra -Werror \
-		-g -gdwarf-4 #-fsanitize=address,undefined
+		-gdwarf-2 #-fsanitize=address,undefined
 
 
 ### COLORS ###
@@ -95,8 +95,6 @@ watch:
 	done
 
 test: all
-	@$(CC) $(CFLAGS) -o test tests/main.c -Lbin -L$(LIBFT_BIN) -lcli -lft -fsanitize=address -g
-	@./test
-	@rm -f test
+	$(CC)  $(CFLAGS)  -o test tests/main.c -Lbin -L$(LIBFT_BIN) -lcli -lft -gdwarf-2 # -fsanitize=address
 
 .PHONY: all clean fclean re

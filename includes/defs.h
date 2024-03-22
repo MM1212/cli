@@ -6,7 +6,7 @@
 /*   By: martiper <martiper@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 11:39:03 by martiper          #+#    #+#             */
-/*   Updated: 2024/03/21 17:13:58 by martiper         ###   ########.fr       */
+/*   Updated: 2024/03/22 15:37:40 by martiper         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,13 @@
 
 # include <stdbool.h>
 # include <stdint.h>
+# include <libft.h>
 
 typedef struct s_cli_switch			t_cli_switch;
 typedef struct s_cli_flag			t_cli_flag;
 typedef struct s_cli_option			t_cli_option;
 typedef struct s_cli_option_builder	t_cli_option_builder;
+typedef struct s_cli_parser			t_cli_parser;
 typedef struct s_cli_handle			t_cli_handle;
 typedef enum e_cli_option_type		t_cli_option_type;
 typedef enum e_cli_option_flag		t_cli_option_flag;
@@ -56,16 +58,18 @@ enum e_cli_error_code
 	CLI_ERROR_NONE = 0,
 	CLI_ERROR_BUILDER_INVALID_OPTION,
 	CLI_ERROR_INVALID_OPTION,
-	CLI_ERROR_MISSING_ARGUMENT,
+	CLI_ERROR_UNRECOGNIZED_OPTION,
+	CLI_ERROR_ARGUMENT_REQUIRED_FOR_OPTION,
 	CLI_ERROR_INVALID_ARGUMENT,
 	CLI_ERROR_UNKNOWN
 };
 
-#define CLI_ERROR_MSG_BUILDER_INVALID_OPTION	"Invalid option while building"
-#define CLI_ERROR_MSG_INVALID_OPTION	"Invalid option"
-#define CLI_ERROR_MSG_MISSING_ARGUMENT	"Missing argument"
-#define CLI_ERROR_MSG_INVALID_ARGUMENT	"Invalid argument"
-#define CLI_ERROR_MSG_UNKNOWN			"Unknown error"
+#define CLI_ERROR_MSG_BUILDER_INVALID_OPTION	"invalid option while building -- ‘%s’"
+#define CLI_ERROR_MSG_INVALID_OPTION	"invalid option -- ‘%s’"
+#define CLI_ERROR_MSG_UNRECOGNIZED_OPTION	"unrecognized option -- ‘%s’"
+#define CLI_ERROR_MSG_ARGUMENT_REQUIRED_FOR_OPTION	"option ‘%s’ requires an argument"
+#define CLI_ERROR_MSG_INVALID_ARGUMENT	"invalid argument ‘%s’ for ‘%s’"
+#define CLI_ERROR_MSG_UNKNOWN			"unknown error"
 
 struct s_cli_option
 {
@@ -107,12 +111,20 @@ struct s_cli_option_builder
 	t_cli_option			_option;
 };
 
+struct s_cli_parser
+{
+	t_list	*args;
+	char	**argv;
+	int		argc;
+};
+
 struct s_cli_handle
 {
 	t_cli_option			*options;
 	uint32_t				options_size;
 
 	// runtime values
+	t_cli_parser			parser;
 	char					**args;
 	bool					valid;
 	t_cli_error_code		error_code;
@@ -120,17 +132,19 @@ struct s_cli_handle
 
 	// internal api
 	void					(*print)(void);
-	void					(*set_error)(t_cli_error_code code, const char *message, bool heap);
+	void					(*set_error)(t_cli_error_code code, ...);
 
 	// public api
 	bool					(*parse)(int argc, char **argv);
 	bool					(*is_present)(const char *name);
 	char					*(*get_value)(const char *name);
-	t_cli_option			*(*get_option)(const char *name);
+	t_cli_option			*(*get_option)(const char *slug);
+	t_cli_option			*(*get_option_by_flag)(const char *flag);
+	t_cli_option			*(*get_option_by_switch)(char letter);
 	void					(*free)(void);
 	bool					(*is_valid)(void);
 	int						(*output_error)(void); // outputs error message to stderr and returns error code
-	t_cli_option_builder*	(*new_option)(const char *slug, const char *description);
+	t_cli_option_builder*	(*new_option)(const char *slug, const char *description, bool add_as_flag);
 };
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: martiper <martiper@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 16:45:23 by martiper          #+#    #+#             */
-/*   Updated: 2024/03/21 17:28:08 by martiper         ###   ########.fr       */
+/*   Updated: 2024/03/22 15:51:38 by martiper         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,15 +18,24 @@ int main(int argc, char **av)
 	(void)av;
 
 	t_cli_handle *cli = cli_begin();
-	cli->new_option("help", "Display an help message")
-		->add_flag("help")
+	cli->new_option("help", "Display an help message", true)
 		->add_switch('h')
-		->add_switch('t')
-		->add_flag("h")
+		->set_flags(CLI_OPTION_FLAG_OPTIONAL)
+		->set_type(CLI_OPTION_INPUT)
+		->end();
+	cli->new_option("color", "Enable color output", true)
+		->set_default_value("always")
+		->add_choice("always")
+		->add_choice("auto")
+		->add_choice("never")
 		->end();
 
+	if (!cli->parse(argc, av))
+	{
+		const int exit_status = cli->output_error();
+		cli->free();
+		return exit_status;
+	}
 	cli->print();
-	if (!cli->is_valid())
-		cli->output_error();
 	cli->free();
 }
