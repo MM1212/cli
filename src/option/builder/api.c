@@ -6,7 +6,7 @@
 /*   By: martiper <martiper@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 12:17:05 by martiper          #+#    #+#             */
-/*   Updated: 2024/03/23 23:11:20 by martiper         ###   ########.fr       */
+/*   Updated: 2024/03/23 23:11:49 by martiper         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ t_cli_option			*cli_opt_builder_end(void)
 	if (this->_option._handle->get_option(this->_option.slug))
 	{
 		t_cli_option *opt = this->_option._handle->get_option(this->_option.slug);
+		cli_cleanup_option(opt);
 		*opt = this->_option;
 		this->reset();
 		return (opt);
