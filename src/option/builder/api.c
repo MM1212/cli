@@ -6,7 +6,7 @@
 /*   By: martiper <martiper@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 12:17:05 by martiper          #+#    #+#             */
-/*   Updated: 2024/03/23 12:23:06 by martiper         ###   ########.fr       */
+/*   Updated: 2024/03/23 13:45:26 by martiper         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ t_cli_option_builder	*cli_opt_builder_init(t_cli_handle *handle)
 	this->is_valid = cli_opt_builder_is_valid;
 	this->reset = cli_opt_builder_reset;
 	this->end = cli_opt_builder_end;
+	this->set_cb = cli_opt_builder_set_cb;
 	this->reset();
 	this->_option._handle = handle;
 
