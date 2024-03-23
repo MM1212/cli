@@ -6,7 +6,7 @@
 /*   By: martiper <martiper@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 16:10:33 by martiper          #+#    #+#             */
-/*   Updated: 2024/03/23 11:45:03 by martiper         ###   ########.fr       */
+/*   Updated: 2024/03/23 22:25:29 by martiper         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,7 +185,7 @@ t_cli_option_builder	*cli_handle_new_option(const char *slug, const char *desc, 
 	t_cli_option_builder *builder = cli_opt_builder_init(this);
 	builder->_option.slug = ft_strdup(slug);
 	builder->set_description((char *)desc);
-	builder->add_flags(CLI_OPTION_FLAG_OPTIONAL);
+	builder->set_flags(CLI_OPTION_FLAG_NONE);
 	if (add_as_flag)
 		builder->add_flag((char*)slug);
 	return (builder);
