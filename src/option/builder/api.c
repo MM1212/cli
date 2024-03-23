@@ -6,7 +6,7 @@
 /*   By: martiper <martiper@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 12:17:05 by martiper          #+#    #+#             */
-/*   Updated: 2024/03/23 23:04:11 by martiper         ###   ########.fr       */
+/*   Updated: 2024/03/23 23:11:20 by martiper         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,13 @@ t_cli_option			*cli_opt_builder_end(void)
 	{
 		this->reset();
 		return (NULL);
+	}
+	if (this->_option._handle->get_option(this->_option.slug))
+	{
+		t_cli_option *opt = this->_option._handle->get_option(this->_option.slug);
+		*opt = this->_option;
+		this->reset();
+		return (opt);
 	}
 	uint32_t		new_len = this->_option._handle->options_size + 1;
 	t_cli_option	*new_options = ft_calloc(new_len, sizeof(t_cli_option));
