@@ -29,7 +29,7 @@ CFLAGS = \
 		$(INCLUDES) \
 		-MT $@ -MMD -MP -MF $(DEP_DIR)/$*.d \
 		-Wall -Wextra -Werror \
-		-gdwarf-2 #-fsanitize=address,undefined
+		-g #-fsanitize=address,undefined
 
 
 ### COLORS ###
@@ -95,6 +95,6 @@ watch:
 	done
 
 test: all
-	$(CC)  $(CFLAGS)  -o test tests/main.c -Lbin -L$(LIBFT_BIN) -lcli -lft -gdwarf-2 # -fsanitize=address
+	$(CC)  $(CFLAGS)  -o test tests/main.c -Lbin -L$(LIBFT_BIN) -lcli -lft
 
 .PHONY: all clean fclean re
