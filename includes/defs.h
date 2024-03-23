@@ -6,7 +6,7 @@
 /*   By: martiper <martiper@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 11:39:03 by martiper          #+#    #+#             */
-/*   Updated: 2024/03/23 14:06:03 by martiper         ###   ########.fr       */
+/*   Updated: 2024/03/23 14:08:48 by martiper         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,7 +144,6 @@ struct s_cli_handle
 	t_cli_parser			parser;
 	char					**args;
 	bool					valid;
-	bool					should_exit;
 	t_cli_error_code		error_code;
 	char					*error_message; // must be heap allocated
 
