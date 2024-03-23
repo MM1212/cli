@@ -6,7 +6,7 @@
 /*   By: martiper <martiper@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 14:05:40 by martiper          #+#    #+#             */
-/*   Updated: 2024/03/23 14:06:31 by martiper         ###   ########.fr       */
+/*   Updated: 2024/03/23 15:02:23 by martiper         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -201,7 +201,6 @@ static void	cli_handle_callbacks(void)
 		if (this->options[i].cb && this->options[i].is_present)
 		{
 			this->options[i].cb(&this->options[i]);
-			this->settings.should_exit = true;
 			if (this->settings.run_cb_only_once)
 				break;
 		}

@@ -6,7 +6,7 @@
 /*   By: martiper <martiper@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 11:39:03 by martiper          #+#    #+#             */
-/*   Updated: 2024/03/23 14:08:48 by martiper         ###   ########.fr       */
+/*   Updated: 2024/03/23 15:03:08 by martiper         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ struct s_cli_option
 	char				*value; // value provided by user
 
 	// internal values
-	void				(*cb)(t_cli_option *option); // callback function, if provided, will be called and set _handle->shoud_exit to true
+	void				(*cb)(t_cli_option *option); // callback function, if provided, will be called
 	t_cli_switch		*_switches; // list of switches for this option
 	uint32_t			_switches_size; // number of switches
 	t_cli_flag			*_flags; // list of flags for this option
