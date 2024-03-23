@@ -6,7 +6,7 @@
 /*   By: martiper <martiper@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 14:05:40 by martiper          #+#    #+#             */
-/*   Updated: 2024/03/23 11:06:51 by martiper         ###   ########.fr       */
+/*   Updated: 2024/03/23 11:31:23 by martiper         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,14 +123,18 @@ bool cli_handle_parse(int argc, char **argv)
 	this->parser.argc = argc;
 	this->parser.argv = argv;
 	bool valid = true;
+	bool add_all_as_args = false;
 	for (int i = 0; i < argc; i++)
 	{
-		if (argv[i][0] != '-' || argv[i][1] == '\0')
+		bool is_flag = ft_strncmp(argv[i], "--", 2) == 0;
+		bool is_only_flag = false;
+		if (add_all_as_args || argv[i][0] != '-' || argv[i][1] == '\0' || (is_only_flag = ft_strcmp(argv[i], "--") == 0))
 		{
+			if (is_only_flag)
+				add_all_as_args = true;
 			ft_lstadd_back(&this->parser.args, ft_lstnew(argv[i]));
 			continue;
 		}
-		bool is_flag = ft_strncmp(argv[i], "--", 2) == 0;
 		valid = is_flag ? parse_flag(argv[i]) : parse_switch(argv[i], &i);
 		if (!valid)
 			break;
