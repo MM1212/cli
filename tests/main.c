@@ -6,7 +6,7 @@
 /*   By: martiper <martiper@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 16:45:23 by martiper          #+#    #+#             */
-/*   Updated: 2024/03/23 21:25:23 by martiper         ###   ########.fr       */
+/*   Updated: 2024/03/23 22:40:53 by martiper         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int main(int argc, char **av)
 		->add_choice("never", (char*[]){"auto", "no", "none", NULL})
 		->add_choice("auto", (char*[]){"auto", "tty", "if-tty", NULL})
 		->end();
-
+	cli->print();
 	if (!cli->parse(argc, av))
 	{
 		const int exit_status = cli->output_error();

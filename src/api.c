@@ -6,7 +6,7 @@
 /*   By: martiper <martiper@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 16:10:33 by martiper          #+#    #+#             */
-/*   Updated: 2024/03/23 22:25:29 by martiper         ###   ########.fr       */
+/*   Updated: 2024/03/23 22:44:40 by martiper         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,12 +120,16 @@ t_cli_option	*cli_handle_get_option(const char *name)
 
 t_cli_option	*cli_handle_get_option_by_flag(const char *flag)
 {
+	if (!this->options)
+		return (NULL);
 	for (uint32_t i = 0; i < this->options_size; i++)
+	{
 		for (uint32_t j = 0; j < this->options[i]._flags_size; j++)
 		{
 			if (ft_strcmp(this->options[i]._flags[j].name, flag) == 0)
 				return (&this->options[i]);
 		}
+	}
 	return (NULL);
 }
 
@@ -160,6 +164,7 @@ void	cli_handle_cleanup(void)
 	for (uint32_t i = 0; i < this->options_size; i++)
 		cli_cleanup_option(&this->options[i]);
 	free(this->options);
+	free(this->options_runtime);
 	ft_split_free(this->args);
 	ft_bzero(this, sizeof(t_cli_handle));
 }

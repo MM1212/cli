@@ -6,7 +6,7 @@
 /*   By: martiper <martiper@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 14:05:40 by martiper          #+#    #+#             */
-/*   Updated: 2024/03/23 21:31:25 by martiper         ###   ########.fr       */
+/*   Updated: 2024/03/23 22:37:32 by martiper         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -199,9 +199,9 @@ static void	cli_handle_callbacks(void)
 {
 	for (uint32_t i = 0; i < this->options_size; i++)
 	{
-		if (this->options[i].cb && this->options[i].is_present)
+		if (this->options_runtime[i]->cb && this->options_runtime[i]->is_present)
 		{
-			this->options[i].cb(&this->options[i]);
+			this->options_runtime[i]->cb(this->options_runtime[i]);
 			if (this->settings.run_cb_only_once)
 				break;
 		}
@@ -210,15 +210,23 @@ static void	cli_handle_callbacks(void)
 
 static void	cli_sort_options_by_presence(void)
 {
+	this->options_runtime = ft_calloc(this->options_size, sizeof(t_cli_option*));
+	if (!this->options_runtime)
+	{
+		this->set_error(CLI_ERROR_MEMORY);
+		return;
+	}
+	for (uint32_t i = 0; i < this->options_size; i++)
+		this->options_runtime[i] = &this->options[i];
 	for (uint32_t i = 0; i < this->options_size; i++)
 	{
 		for (uint32_t j = i + 1; j < this->options_size; j++)
 		{
-			if (this->options[i].presence_idx > this->options[j].presence_idx)
+			if (this->options_runtime[i]->presence_idx > this->options_runtime[j]->presence_idx)
 			{
-				t_cli_option tmp = this->options[i];
-				this->options[i] = this->options[j];
-				this->options[j] = tmp;
+				t_cli_option *tmp = this->options_runtime[i];
+				this->options_runtime[i] = this->options_runtime[j];
+				this->options_runtime[j] = tmp;
 			}
 		}
 	}

@@ -6,7 +6,7 @@
 /*   By: martiper <martiper@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 11:39:03 by martiper          #+#    #+#             */
-/*   Updated: 2024/03/23 21:17:59 by martiper         ###   ########.fr       */
+/*   Updated: 2024/03/23 22:35:25 by martiper         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,6 +146,7 @@ struct s_cli_settings
 struct s_cli_handle
 {
 	t_cli_option			*options;
+	t_cli_option			**options_runtime; // a view that will be sorted by arg presence but doesnt own the options
 	uint32_t				options_size;
 
 	// runtime values
