@@ -6,7 +6,7 @@
 /*   By: martiper <martiper@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 12:17:05 by martiper          #+#    #+#             */
-/*   Updated: 2024/03/23 21:26:11 by martiper         ###   ########.fr       */
+/*   Updated: 2024/03/23 21:43:10 by martiper         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,8 +137,17 @@ t_cli_option_builder	*cli_opt_builder_add_choice(char *choice, char **aliases)
 		this->set_type(CLI_OPTION_SELECT);
 	t_cli_option_choice *new = ft_calloc(1, sizeof(t_cli_option_choice));
 	if (!new)
+	{
+		this->_option._handle->set_error(CLI_ERROR_MEMORY);
 		return (this);
+	}
 	new->slug = ft_strdup(choice);
+	if (!new->slug)
+	{
+		free(new);
+		this->_option._handle->set_error(CLI_ERROR_MEMORY);
+		return (this);
+	}
 	uint32_t count;
 	for (count = 0; aliases[count]; count++);
 	new->aliases = ft_calloc(count + 1, sizeof(char *));
@@ -146,6 +155,7 @@ t_cli_option_builder	*cli_opt_builder_add_choice(char *choice, char **aliases)
 	{
 		free(new->slug);
 		free(new);
+		this->_option._handle->set_error(CLI_ERROR_MEMORY);
 		return (this);
 	}
 	for (uint32_t i = 0; i < count; i++)
@@ -154,6 +164,7 @@ t_cli_option_builder	*cli_opt_builder_add_choice(char *choice, char **aliases)
 		if (!new->aliases[i])
 		{
 			cli_cleanup_option_choice(new);
+			this->_option._handle->set_error(CLI_ERROR_MEMORY);
 			return (this);
 		}
 	}
@@ -161,6 +172,7 @@ t_cli_option_builder	*cli_opt_builder_add_choice(char *choice, char **aliases)
 	if (!node)
 	{
 		cli_cleanup_option_choice(new);
+		this->_option._handle->set_error(CLI_ERROR_MEMORY);
 		return (this);
 	}
 	ft_lstadd_back(&this->_option.choices, node);
