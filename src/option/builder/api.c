@@ -6,7 +6,7 @@
 /*   By: martiper <martiper@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 12:17:05 by martiper          #+#    #+#             */
-/*   Updated: 2024/03/23 14:03:58 by martiper         ###   ########.fr       */
+/*   Updated: 2024/03/23 21:10:20 by martiper         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ t_cli_option_builder	*cli_opt_builder_init(t_cli_handle *handle)
 	this->remove_flags = cli_opt_builder_remove_flags;
 	this->has_flags = cli_opt_builder_has_flags;
 	this->set_description = cli_opt_builder_set_description;
+	this->set_description_footer = cli_opt_builder_set_description_footer;
 	this->set_default_value = cli_opt_builder_set_default_value;
 	this->add_choice = cli_opt_builder_add_choice;
 	this->add_switch = cli_opt_builder_add_switch;
@@ -107,7 +108,17 @@ bool	cli_opt_builder_has_flags(int flags)
 
 t_cli_option_builder	*cli_opt_builder_set_description(char *description)
 {
+	if (this->_option.description)
+		free(this->_option.description);
 	this->_option.description = ft_strdup(description);
+	return (this);
+}
+
+t_cli_option_builder	*cli_opt_builder_set_description_footer(char *description_footer)
+{
+	if (this->_option.description_footer)
+		free(this->_option.description_footer);
+	this->_option.description_footer = ft_strdup(description_footer);
 	return (this);
 }
 

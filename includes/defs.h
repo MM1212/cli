@@ -6,7 +6,7 @@
 /*   By: martiper <martiper@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 11:39:03 by martiper          #+#    #+#             */
-/*   Updated: 2024/03/23 15:03:08 by martiper         ###   ########.fr       */
+/*   Updated: 2024/03/23 21:09:02 by martiper         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,7 @@ struct s_cli_option
 	t_cli_option_type	type; // input or select
 	int					flags; // required, optional, hidden
 	char				*description; // description for help
+	char				*description_footer; // extra information added after all the options
 	char				*default_value; // default value if not provided (is_present(...) will always return true if default is set)
 	char				**choices; // list of choices for select type
 	// runtime values
@@ -107,6 +108,7 @@ struct s_cli_option_builder
 	t_cli_option_builder*	(*remove_flags)(int flags);
 	bool					(*has_flags)(int flags);
 	t_cli_option_builder*	(*set_description)(char *description);
+	t_cli_option_builder*	(*set_description_footer)(char *description_footer);
 	t_cli_option_builder*	(*set_default_value)(char *default_value); // will also call set_flags(CLI_OPTION_FLAG_OPTIONAL)
 	t_cli_option_builder*	(*add_choice)(char *choice); // will also call set_type(CLI_OPTION_SELECT)
 	t_cli_option_builder*	(*add_switch)(char letter);
