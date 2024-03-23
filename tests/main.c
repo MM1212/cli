@@ -6,7 +6,7 @@
 /*   By: martiper <martiper@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 16:45:23 by martiper          #+#    #+#             */
-/*   Updated: 2024/03/23 12:02:31 by martiper         ###   ########.fr       */
+/*   Updated: 2024/03/23 21:25:23 by martiper         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,9 @@ int main(int argc, char **av)
 	cli->new_option("color", "Enable color output", true)
 		->set_default_value("always")
 		->add_flag("he")
-		->add_choice("always")
-		->add_choice("auto")
-		->add_choice("never")
+		->add_choice("always", (char*[]){"always", "yes", "force", NULL})
+		->add_choice("never", (char*[]){"auto", "no", "none", NULL})
+		->add_choice("auto", (char*[]){"auto", "tty", "if-tty", NULL})
 		->end();
 
 	if (!cli->parse(argc, av))

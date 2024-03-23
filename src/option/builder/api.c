@@ -6,13 +6,14 @@
 /*   By: martiper <martiper@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 12:17:05 by martiper          #+#    #+#             */
-/*   Updated: 2024/03/23 21:10:20 by martiper         ###   ########.fr       */
+/*   Updated: 2024/03/23 21:26:11 by martiper         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "__accumulators.h"
 #include "option/builder/__api.h"
 #include <option/flag.h>
+#include <option/choice.h>
 #include <option/utils.h>
 #include <libft.h>
 
@@ -77,7 +78,7 @@ t_cli_option_builder	*cli_opt_builder_set_type(t_cli_option_type type)
 {
 	this->_option.type = type;
 	if (type == CLI_OPTION_INPUT) {
-		ft_split_free(this->_option.choices);
+		ft_lstclear(&this->_option.choices, (void(*)(void*))cli_cleanup_option_choice);
 		this->_option.choices = NULL;
 	}
 	return (this);
@@ -130,22 +131,39 @@ t_cli_option_builder	*cli_opt_builder_set_default_value(char *default_value)
 	return (this);
 }
 
-t_cli_option_builder	*cli_opt_builder_add_choice(char *choice)
+t_cli_option_builder	*cli_opt_builder_add_choice(char *choice, char **aliases)
 {
 	if (this->_option.type != CLI_OPTION_SELECT)
 		this->set_type(CLI_OPTION_SELECT);
-	char* choices = ft_strjoin_sep2("\1", this->_option.choices);
-	if (!choices && this->_option.choices)
-		return (NULL);
-	char *tmp = ft_strjoin_sep("\1", choices ? choices : "", choice, NULL);
-	free(choices);
-	if (!tmp)
-		return (NULL);
-	ft_split_free(this->_option.choices);
-	this->_option.choices = ft_split(tmp, "\1");
-	free(tmp);
-	if (!this->_option.choices)
-		return (NULL);
+	t_cli_option_choice *new = ft_calloc(1, sizeof(t_cli_option_choice));
+	if (!new)
+		return (this);
+	new->slug = ft_strdup(choice);
+	uint32_t count;
+	for (count = 0; aliases[count]; count++);
+	new->aliases = ft_calloc(count + 1, sizeof(char *));
+	if (!new->aliases)
+	{
+		free(new->slug);
+		free(new);
+		return (this);
+	}
+	for (uint32_t i = 0; i < count; i++)
+	{
+		new->aliases[i] = ft_strdup(aliases[i]);
+		if (!new->aliases[i])
+		{
+			cli_cleanup_option_choice(new);
+			return (this);
+		}
+	}
+	t_list* node = ft_lstnew(new);
+	if (!node)
+	{
+		cli_cleanup_option_choice(new);
+		return (this);
+	}
+	ft_lstadd_back(&this->_option.choices, node);
 	return (this);
 }
 

@@ -6,7 +6,7 @@
 /*   By: martiper <martiper@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 11:39:03 by martiper          #+#    #+#             */
-/*   Updated: 2024/03/23 21:09:02 by martiper         ###   ########.fr       */
+/*   Updated: 2024/03/23 21:17:59 by martiper         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 typedef struct s_cli_switch			t_cli_switch;
 typedef struct s_cli_flag			t_cli_flag;
 typedef struct s_cli_option			t_cli_option;
+typedef struct s_cli_option_choice	t_cli_option_choice;
 typedef struct s_cli_option_builder	t_cli_option_builder;
 typedef void						(*t_cli_option_cb)(t_cli_option *option);
 typedef struct s_cli_parser			t_cli_parser;
@@ -77,6 +78,12 @@ enum e_cli_error_code
 #define CLI_ERROR_MSG_MEMORY			"memory error"
 #define CLI_ERROR_MSG_UNKNOWN			"unknown error"
 
+struct s_cli_option_choice
+{
+	char	*slug;
+	char	**aliases;
+};
+
 struct s_cli_option
 {
 	char				*slug; // slug name
@@ -85,7 +92,7 @@ struct s_cli_option
 	char				*description; // description for help
 	char				*description_footer; // extra information added after all the options
 	char				*default_value; // default value if not provided (is_present(...) will always return true if default is set)
-	char				**choices; // list of choices for select type
+	t_list				*choices; // list of choices for select type
 	// runtime values
 	bool				is_present; // if the option was provided by user
 	uint32_t			presence_idx; // index of the option that was provided by user
@@ -110,7 +117,7 @@ struct s_cli_option_builder
 	t_cli_option_builder*	(*set_description)(char *description);
 	t_cli_option_builder*	(*set_description_footer)(char *description_footer);
 	t_cli_option_builder*	(*set_default_value)(char *default_value); // will also call set_flags(CLI_OPTION_FLAG_OPTIONAL)
-	t_cli_option_builder*	(*add_choice)(char *choice); // will also call set_type(CLI_OPTION_SELECT)
+	t_cli_option_builder*	(*add_choice)(char *choice, char **aliases); // will also call set_type(CLI_OPTION_SELECT)
 	t_cli_option_builder*	(*add_switch)(char letter);
 	t_cli_option_builder*	(*add_flag)(char *name);
 	t_cli_option*			(*end)(void);

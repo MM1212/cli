@@ -4,8 +4,7 @@ PROJECT_NAME = CLI
 ARCH_DIR = bin
 NAME =	$(addprefix $(ARCH_DIR)/, libcli.a)
 
-SRC_FILES = accumulators.c option/builder/api.c option/flag.c \
-			option/utils.c api.c parser.c
+SRC_FILES = $(shell find src -type f -name '*.c' | sed 's/src\///g')
 
 SRC_DIR = src
 

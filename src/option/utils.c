@@ -6,12 +6,13 @@
 /*   By: martiper <martiper@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 12:54:25 by martiper          #+#    #+#             */
-/*   Updated: 2024/03/22 15:26:29 by martiper         ###   ########.fr       */
+/*   Updated: 2024/03/23 21:36:47 by martiper         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "option/utils.h"
 #include <option/flag.h>
+#include <option/choice.h>
 #include <libft.h>
 
 void	cli_cleanup_option(t_cli_option *option)
@@ -23,7 +24,7 @@ void	cli_cleanup_option(t_cli_option *option)
 	if (option->default_value)
 		free(option->default_value);
 	if (option->choices)
-		ft_split_free(option->choices);
+		ft_lstclear(&option->choices, (void (*)(void *))cli_cleanup_option_choice);
 	if (option->value)
 		free(option->value);
 	for (uint32_t i = 0; i < option->_flags_size; i++)
@@ -31,6 +32,14 @@ void	cli_cleanup_option(t_cli_option *option)
 	free(option->_switches);
 	if (option->_flags)
 		free(option->_flags);
+}
+
+static void	print_option_choice(t_cli_option_choice* choice, char *tabs)
+{
+	ft_printf("%s\t\t- ", tabs, choice->slug);
+	for (uint32_t i = 0; choice->aliases[i]; i++)
+		ft_printf("%s%s", i == 0 ? "" : ", ", choice->aliases[i]);
+	ft_printf("\n");
 }
 
 void	cli_print_option(t_cli_option *option, bool header, int indent)
@@ -49,8 +58,7 @@ void	cli_print_option(t_cli_option *option, bool header, int indent)
 	if (option->type == CLI_OPTION_SELECT)
 	{
 		ft_printf("%s\tchoices:\n", tabs);
-		for (uint32_t i = 0; option->choices[i]; i++)
-			ft_printf("%s\t\t- %s\n", tabs, option->choices[i]);
+		ft_lstiter2(option->choices, (t_lst_iter2)print_option_choice, tabs);
 	}
 	ft_printf("%s\tswitches: '", tabs);
 	for (uint32_t i = 0; i < option->_switches_size; i++)

@@ -83,7 +83,9 @@
 		"cinttypes": "c",
 		"cstdbool": "c",
 		"typeinfo": "c",
-		"ft_printf.h": "c"
+		"ft_printf.h": "c",
+		"flag.h": "c",
+		"libft.h": "c"
 	},
     "files.exclude": {
       "**/*.o": false,

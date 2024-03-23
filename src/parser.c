@@ -6,7 +6,7 @@
 /*   By: martiper <martiper@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 14:05:40 by martiper          #+#    #+#             */
-/*   Updated: 2024/03/23 15:02:23 by martiper         ###   ########.fr       */
+/*   Updated: 2024/03/23 21:31:25 by martiper         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,16 @@
 #include <stdio.h>
 
 #define this (g_cli_handle)
+
+static bool find_option_choice(t_cli_option_choice* choice, char* arg)
+{
+	for (uint32_t i = 0; choice->aliases[i]; i++)
+	{
+		if (ft_strcmp(choice->aliases[i], arg) == 0)
+			return (true);
+	}
+	return (false);
+}
 
 static bool parse_option(t_cli_option *option, char *arg, char *key)
 {
@@ -35,16 +45,7 @@ static bool parse_option(t_cli_option *option, char *arg, char *key)
 		arg = option->default_value;
 	if (option->type == CLI_OPTION_SELECT)
 	{
-		bool found = false;
-		for (uint32_t i = 0; option->choices[i]; i++)
-		{
-			if (ft_strcmp(option->choices[i], arg) == 0)
-			{
-				found = true;
-				break;
-			}
-		}
-		if (!found)
+		if (!ft_lstfind(option->choices, (t_lst_find)find_option_choice, arg))
 		{
 			this->set_error(CLI_ERROR_INVALID_ARGUMENT, arg ? arg : "", key);
 			return (false);
