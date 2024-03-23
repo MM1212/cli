@@ -6,7 +6,7 @@
 /*   By: martiper <martiper@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 12:17:05 by martiper          #+#    #+#             */
-/*   Updated: 2024/03/23 11:06:18 by martiper         ###   ########.fr       */
+/*   Updated: 2024/03/23 12:23:06 by martiper         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,4 +176,10 @@ bool	cli_opt_builder_is_valid(void)
 	else if (!this->_option.description)
 		this->_option._handle->set_error(CLI_ERROR_BUILDER_INVALID_OPTION, "Missing description");
 	return (this->_option._handle->valid);
+}
+
+t_cli_option_builder*	cli_opt_builder_set_cb(t_cli_option_cb cb)
+{
+	this->_option.cb = cb;
+	return (this);
 }

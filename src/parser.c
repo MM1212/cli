@@ -6,7 +6,7 @@
 /*   By: martiper <martiper@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 14:05:40 by martiper          #+#    #+#             */
-/*   Updated: 2024/03/23 12:02:20 by martiper         ###   ########.fr       */
+/*   Updated: 2024/03/23 12:22:52 by martiper         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -193,6 +193,18 @@ static bool parse_switch(char *switch_seq, int *i)
 	return (true);
 }
 
+static void	cli_handle_callbacks(void)
+{
+	for (uint32_t i = 0; i < this->options_size; i++)
+	{
+		if (this->options[i].cb && this->options[i].is_present)
+		{
+			this->options[i].cb(&this->options[i]);
+			this->should_exit = true;
+		}
+	}
+}
+
 bool cli_handle_parse(int argc, char **argv)
 {
 	argc--;
@@ -231,5 +243,6 @@ bool cli_handle_parse(int argc, char **argv)
 		head = head->next;
 	}
 	ft_lstclear(&this->parser.args, NULL);
+	cli_handle_callbacks();
 	return (true);
 }

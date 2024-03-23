@@ -6,7 +6,7 @@
 /*   By: martiper <martiper@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 11:39:03 by martiper          #+#    #+#             */
-/*   Updated: 2024/03/23 11:59:56 by martiper         ###   ########.fr       */
+/*   Updated: 2024/03/23 12:19:53 by martiper         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ typedef struct s_cli_switch			t_cli_switch;
 typedef struct s_cli_flag			t_cli_flag;
 typedef struct s_cli_option			t_cli_option;
 typedef struct s_cli_option_builder	t_cli_option_builder;
+typedef void						(*t_cli_option_cb)(t_cli_option *option);
 typedef struct s_cli_parser			t_cli_parser;
 typedef struct s_cli_handle			t_cli_handle;
 typedef enum e_cli_option_type		t_cli_option_type;
@@ -88,6 +89,7 @@ struct s_cli_option
 	char				*value; // value provided by user
 
 	// internal values
+	void				(*cb)(t_cli_option *option); // callback function, if provided, will be called and set _handle->shoud_exit to true
 	t_cli_switch		*_switches; // list of switches for this option
 	uint32_t			_switches_size; // number of switches
 	t_cli_flag			*_flags; // list of flags for this option
@@ -110,6 +112,7 @@ struct s_cli_option_builder
 	t_cli_option*			(*end)(void);
 	t_cli_option_builder*	(*reset)(void);
 	bool					(*is_valid)(void);
+	t_cli_option_builder*	(*set_cb)(t_cli_option_cb cb);
 
 	// internal values
 	t_cli_option			_option;
@@ -131,6 +134,7 @@ struct s_cli_handle
 	t_cli_parser			parser;
 	char					**args;
 	bool					valid;
+	bool					should_exit;
 	t_cli_error_code		error_code;
 	char					*error_message; // must be heap allocated
 
