@@ -12,7 +12,7 @@ SRC_DIR = src
 SRCS = $(addprefix $(SRC_DIR)/, $(SRC_FILES))
 
 OBJ_DIR = objs
-OBJ_FILES = $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))
+OBJ_FILES = $(addprefix $(OBJ_DIR)/, $(SRC_FILES:.c=.o))
 
 DEP_DIR = deps
 DEP_FILES = $(addprefix $(DEP_DIR)/, $(SRCS:.c=.d))
@@ -49,11 +49,16 @@ TAG = [$(CYAN)$(PROJECT_NAME)$(RESET)]
 all: $(NAME)
 
 $(NAME): $(OBJ_FILES) $(LIBFT_ARCH)
-	@mkdir -p $(dir $@)
-	@ar -rcs $@ $^ $(LIBFT_ARCH)
+	@echo "$(TAG) building $(YELLOW)$(NAME)$(RESET).."
+#	@mkdir -p $(dir $@)
+#	@mkdir -p $$(dirname $$(ar -t $(LIBFT_ARCH) | xargs) | awk "{print \"$(dir $@)$(LIBFT_PATH)/\""'$$1}' | xargs)
+#	@ar -x $(LIBFT_ARCH) --output="$(dir $@)$(LIBFT_PATH)"
+#	@find $(dir $@)$(LIBFT_PATH) -name '*.o' -exec ar -rcsP $@ {} \;
+	@cp $(LIBFT_ARCH) $@
+	@ar -rcsP $@ $(OBJ_FILES)
 	@echo "$(TAG) compiled version $(YELLOW)$$(cat VERSION)$(RESET)!"
 
-$(OBJ_DIR)/%.o: %.c | $(OBJ_DIR) $(DEP_DIR)
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR) $(DEP_DIR)
 	@echo "$(TAG) compiling $(YELLOW)$<$(RESET).."
 	@mkdir -p $(dir $@)
 	@mkdir -p $(dir $(DEP_DIR)/$*.d)
