@@ -48,13 +48,13 @@ TAG = [$(CYAN)$(PROJECT_NAME)$(RESET)]
 
 all: $(NAME)
 
-$(NAME): $(OBJ_FILES) $(LIBFT_ARCH)
+$(NAME): $(OBJ_FILES)
 	@echo "$(TAG) building $(YELLOW)$(NAME)$(RESET).."
 #	@mkdir -p $(dir $@)
 #	@mkdir -p $$(dirname $$(ar -t $(LIBFT_ARCH) | xargs) | awk "{print \"$(dir $@)$(LIBFT_PATH)/\""'$$1}' | xargs)
 #	@ar -x $(LIBFT_ARCH) --output="$(dir $@)$(LIBFT_PATH)"
 #	@find $(dir $@)$(LIBFT_PATH) -name '*.o' -exec ar -rcsP $@ {} \;
-	@cp $(LIBFT_ARCH) $@
+#	@cp $(LIBFT_ARCH) $@
 	@ar -rcsP $@ $(OBJ_FILES)
 	@echo "$(TAG) compiled version $(YELLOW)$$(cat VERSION)$(RESET)!"
 
@@ -99,7 +99,7 @@ watch:
 		echo "$(TAG) $(YELLOW)recompiling$(RESET).."; \
 	done
 
-test: all
+test: all $(LIBFT_ARCH)
 	$(CC)  $(CFLAGS)  -o test tests/main.c -Lbin -L$(LIBFT_BIN) -lcli -lft
 
 .PHONY: all clean fclean re
