@@ -29,7 +29,7 @@ CFLAGS = \
 		$(INCLUDES) \
 		-MT $@ -MMD -MP -MF $(DEP_DIR)/$*.d \
 		-Wall -Wextra -Werror \
-		-g #-fsanitize=address,undefined
+		-g -fsanitize=address,undefined
 
 
 ### COLORS ###

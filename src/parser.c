@@ -6,7 +6,7 @@
 /*   By: martiper <martiper@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 14:05:40 by martiper          #+#    #+#             */
-/*   Updated: 2024/03/23 11:31:23 by martiper         ###   ########.fr       */
+/*   Updated: 2024/03/23 12:02:20 by martiper         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,77 @@ static bool parse_option(t_cli_option *option, char *arg, char *key)
 	return (true);
 }
 
+static uint32_t	check_if_flag_is_ambiguous(char *flag, char** options)
+{
+	uint32_t count = 0;
+	uint32_t len = ft_strlen(flag);
+	*options = NULL;
+	for (uint32_t i = 0; i < this->options_size; i++)
+	{
+		for (uint32_t j = 0; j < this->options[i]._flags_size; j++)
+		{
+			if (ft_strncmp(flag, this->options[i]._flags[j].name, len) == 0)
+			{
+				if (ft_strlen(this->options[i]._flags[j].name) == len)
+				{
+					count = 1;
+					if (*options)
+						free(*options);
+					*options = ft_strdup(this->options[i]._flags[j].name);
+					break;
+				}
+				if (count == 0)
+					*options = ft_strdup(this->options[i]._flags[j].name);
+				else
+				{
+					char* tmp = *options;
+					*options = ft_strjoin_sep(",", *options, this->options[i]._flags[j].name, NULL);
+					free(tmp);
+				}
+				count++;
+			}
+		}
+	}
+	return (count);
+}
+
+static bool	output_ambiguous_options(char *flag, char *ambiguous_options)
+{
+	char** options = ft_split(ambiguous_options, ",");
+	free(ambiguous_options);
+	if (!options)
+	{
+		free(flag);
+		this->set_error(CLI_ERROR_MEMORY);
+		return (false);
+	}
+	for (uint32_t i = 0; options[i]; i++)
+	{
+		char* tmp = ft_strjoin(3, "'--", options[i], "'");
+		if (!tmp)
+		{
+			ft_split_free(options);
+			free(flag);
+			this->set_error(CLI_ERROR_MEMORY);
+			return (false);
+		}
+		free(options[i]);
+		options[i] = tmp;
+	}
+	ambiguous_options = ft_strjoin_sep2(" ", options);
+	ft_split_free(options);
+	if (!ambiguous_options)
+	{
+		free(flag);
+		this->set_error(CLI_ERROR_MEMORY);
+		return (false);
+	}
+	this->set_error(CLI_ERROR_AMBIGUOUS_OPTION, flag, ambiguous_options);
+	free(flag);
+	free(ambiguous_options);
+	return (false);
+}
+
 static bool parse_flag(char *str)
 {
 	char *original = str;
@@ -67,6 +138,12 @@ static bool parse_flag(char *str)
 		flag = ft_strdup(str);
 	else
 		flag = ft_substr(str, 0, equal_sign - str);
+	uint32_t ambiguous_count = 0;
+	char *ambiguous_options = NULL;
+	if ((ambiguous_count = check_if_flag_is_ambiguous(flag, &ambiguous_options)) > 1)
+		return output_ambiguous_options(flag, ambiguous_options);
+	else
+		free(ambiguous_options);
 	t_cli_option *option = cli_handle_get_option_by_flag(flag);
 	free(flag);
 	if (!equal_sign)

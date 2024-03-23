@@ -6,7 +6,7 @@
 /*   By: martiper <martiper@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 16:10:33 by martiper          #+#    #+#             */
-/*   Updated: 2024/03/23 11:06:44 by martiper         ###   ########.fr       */
+/*   Updated: 2024/03/23 11:45:03 by martiper         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,9 @@ void	cli_handle_set_error(t_cli_error_code code, ...)
 			break;
 		case CLI_ERROR_INVALID_ARGUMENT:
 			main_error = CLI_ERROR_MSG_INVALID_ARGUMENT;
+			break;
+		case CLI_ERROR_AMBIGUOUS_OPTION:
+			main_error = CLI_ERROR_MSG_AMBIGUOUS_OPTION;
 			break;
 		case CLI_ERROR_UNKNOWN:
 		default:

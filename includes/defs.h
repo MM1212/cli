@@ -6,7 +6,7 @@
 /*   By: martiper <martiper@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 11:39:03 by martiper          #+#    #+#             */
-/*   Updated: 2024/03/22 15:37:40 by martiper         ###   ########.fr       */
+/*   Updated: 2024/03/23 11:59:56 by martiper         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,8 @@ enum e_cli_error_code
 	CLI_ERROR_UNRECOGNIZED_OPTION,
 	CLI_ERROR_ARGUMENT_REQUIRED_FOR_OPTION,
 	CLI_ERROR_INVALID_ARGUMENT,
+	CLI_ERROR_AMBIGUOUS_OPTION,
+	CLI_ERROR_MEMORY,
 	CLI_ERROR_UNKNOWN
 };
 
@@ -69,6 +71,8 @@ enum e_cli_error_code
 #define CLI_ERROR_MSG_UNRECOGNIZED_OPTION	"unrecognized option -- ‘%s’"
 #define CLI_ERROR_MSG_ARGUMENT_REQUIRED_FOR_OPTION	"option ‘%s’ requires an argument"
 #define CLI_ERROR_MSG_INVALID_ARGUMENT	"invalid argument ‘%s’ for ‘%s’"
+#define CLI_ERROR_MSG_AMBIGUOUS_OPTION	"option ‘--%s’ is ambiguous; possibilities: %s"
+#define CLI_ERROR_MSG_MEMORY			"memory error"
 #define CLI_ERROR_MSG_UNKNOWN			"unknown error"
 
 struct s_cli_option
