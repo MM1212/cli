@@ -5,7 +5,7 @@ ARCH_DIR = bin
 NAME =	$(addprefix $(ARCH_DIR)/, libcli.a)
 
 SRC_FILES = accumulators.c option/builder/api.c option/flag.c \
-			option/utils.c api.c command.c parser.c
+			option/utils.c api.c parser.c
 
 SRC_DIR = src
 

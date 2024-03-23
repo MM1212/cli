@@ -6,7 +6,7 @@
 /*   By: martiper <martiper@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 16:10:33 by martiper          #+#    #+#             */
-/*   Updated: 2024/03/22 15:25:03 by martiper         ###   ########.fr       */
+/*   Updated: 2024/03/23 11:06:44 by martiper         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 #include <stdio.h>
 #include <assert.h>
 
-#define this (cli_acc_get_handle())
+#define this (g_cli_handle)
 
 t_cli_handle	*cli_begin(void)
 {

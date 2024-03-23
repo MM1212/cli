@@ -6,7 +6,7 @@
 /*   By: martiper <martiper@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 14:05:40 by martiper          #+#    #+#             */
-/*   Updated: 2024/03/22 15:57:45 by martiper         ###   ########.fr       */
+/*   Updated: 2024/03/23 11:06:51 by martiper         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include <libft.h>
 #include <stdio.h>
 
-#define this (cli_acc_get_handle())
+#define this (g_cli_handle)
 
 static bool parse_option(t_cli_option *option, char *arg, char *key)
 {
