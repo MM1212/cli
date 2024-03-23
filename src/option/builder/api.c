@@ -6,7 +6,7 @@
 /*   By: martiper <martiper@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 12:17:05 by martiper          #+#    #+#             */
-/*   Updated: 2024/03/23 21:43:10 by martiper         ###   ########.fr       */
+/*   Updated: 2024/03/23 23:04:11 by martiper         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ t_cli_option_builder	*cli_opt_builder_init(t_cli_handle *handle)
 	this->set_description = cli_opt_builder_set_description;
 	this->set_description_footer = cli_opt_builder_set_description_footer;
 	this->set_default_value = cli_opt_builder_set_default_value;
+	this->set_variable_hint = cli_opt_builder_set_variable_hint;
 	this->add_choice = cli_opt_builder_add_choice;
 	this->add_switch = cli_opt_builder_add_switch;
 	this->add_flag = cli_opt_builder_add_flag;
@@ -128,6 +129,14 @@ t_cli_option_builder	*cli_opt_builder_set_default_value(char *default_value)
 	this->_option.default_value = ft_strdup(default_value);
 	this->remove_flags(CLI_OPTION_FLAG_REQUIRED)
 		->add_flags(CLI_OPTION_FLAG_OPTIONAL);
+	return (this);
+}
+
+t_cli_option_builder	*cli_opt_builder_set_variable_hint(char *variable_hint)
+{
+	this->_option.variable_hint = ft_strdup(variable_hint);
+	if (this->has_flags(CLI_OPTION_FLAG_NONE))
+		this->set_flags(CLI_OPTION_FLAG_OPTIONAL);
 	return (this);
 }
 

@@ -6,7 +6,7 @@
 /*   By: martiper <martiper@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 11:39:03 by martiper          #+#    #+#             */
-/*   Updated: 2024/03/23 22:35:25 by martiper         ###   ########.fr       */
+/*   Updated: 2024/03/23 23:02:54 by martiper         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,7 @@ struct s_cli_option
 	char				*description; // description for help
 	char				*description_footer; // extra information added after all the options
 	char				*default_value; // default value if not provided (is_present(...) will always return true if default is set)
+	char				*variable_hint; // hint for flag when receives an argument
 	t_list				*choices; // list of choices for select type
 	// runtime values
 	bool				is_present; // if the option was provided by user
@@ -117,6 +118,7 @@ struct s_cli_option_builder
 	t_cli_option_builder*	(*set_description)(char *description);
 	t_cli_option_builder*	(*set_description_footer)(char *description_footer);
 	t_cli_option_builder*	(*set_default_value)(char *default_value); // will also call set_flags(CLI_OPTION_FLAG_OPTIONAL)
+	t_cli_option_builder*	(*set_variable_hint)(char *variable_hint); // will also call set_flags(CLI_OPTION_FLAG_OPTIONAL) if has_flags(CLI_OPTION_FLAG_NONE)
 	t_cli_option_builder*	(*add_choice)(char *choice, char **aliases); // will also call set_type(CLI_OPTION_SELECT)
 	t_cli_option_builder*	(*add_switch)(char letter);
 	t_cli_option_builder*	(*add_flag)(char *name);

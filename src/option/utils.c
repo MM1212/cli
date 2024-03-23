@@ -6,7 +6,7 @@
 /*   By: martiper <martiper@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 12:54:25 by martiper          #+#    #+#             */
-/*   Updated: 2024/03/23 21:36:47 by martiper         ###   ########.fr       */
+/*   Updated: 2024/03/23 23:04:42 by martiper         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ void	cli_cleanup_option(t_cli_option *option)
 		free(option->description);
 	if (option->default_value)
 		free(option->default_value);
+	if (option->variable_hint)
+		free(option->variable_hint);
 	if (option->choices)
 		ft_lstclear(&option->choices, (void (*)(void *))cli_cleanup_option_choice);
 	if (option->value)
@@ -55,6 +57,7 @@ void	cli_print_option(t_cli_option *option, bool header, int indent)
 	ft_printf("%s\tflags: %d\n", tabs, option->flags);
 	ft_printf("%s\tdescription: %s\n", tabs, option->description);
 	ft_printf("%s\tdefault_value: %s\n", tabs, option->default_value);
+	ft_printf("%s\tvariable_hint: %s\n", tabs, option->variable_hint);
 	if (option->type == CLI_OPTION_SELECT)
 	{
 		ft_printf("%s\tchoices:\n", tabs);
