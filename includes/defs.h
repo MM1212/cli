@@ -6,7 +6,7 @@
 /*   By: martiper <martiper@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 11:39:03 by martiper          #+#    #+#             */
-/*   Updated: 2024/03/23 12:19:53 by martiper         ###   ########.fr       */
+/*   Updated: 2024/03/23 14:06:03 by martiper         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ typedef struct s_cli_option			t_cli_option;
 typedef struct s_cli_option_builder	t_cli_option_builder;
 typedef void						(*t_cli_option_cb)(t_cli_option *option);
 typedef struct s_cli_parser			t_cli_parser;
+typedef struct s_cli_settings		t_cli_settings;
 typedef struct s_cli_handle			t_cli_handle;
 typedef enum e_cli_option_type		t_cli_option_type;
 typedef enum e_cli_option_flag		t_cli_option_flag;
@@ -86,6 +87,7 @@ struct s_cli_option
 	char				**choices; // list of choices for select type
 	// runtime values
 	bool				is_present; // if the option was provided by user
+	uint32_t			presence_idx; // index of the option that was provided by user
 	char				*value; // value provided by user
 
 	// internal values
@@ -120,9 +122,16 @@ struct s_cli_option_builder
 
 struct s_cli_parser
 {
-	t_list	*args;
-	char	**argv;
-	int		argc;
+	t_list		*args;
+	char		**argv;
+	int			argc;
+	uint32_t	option_counter;
+};
+
+struct s_cli_settings
+{
+	bool		should_exit;
+	bool		run_cb_only_once;
 };
 
 struct s_cli_handle
@@ -131,6 +140,7 @@ struct s_cli_handle
 	uint32_t				options_size;
 
 	// runtime values
+	t_cli_settings			settings;
 	t_cli_parser			parser;
 	char					**args;
 	bool					valid;

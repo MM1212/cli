@@ -6,7 +6,7 @@
 /*   By: martiper <martiper@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 14:05:40 by martiper          #+#    #+#             */
-/*   Updated: 2024/03/23 12:22:52 by martiper         ###   ########.fr       */
+/*   Updated: 2024/03/23 14:06:31 by martiper         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ static bool parse_option(t_cli_option *option, char *arg, char *key)
 		free(option->value);
 	option->value = ft_strdup(arg);
 	option->is_present = true;
+	option->presence_idx = ++this->parser.option_counter;
 	return (true);
 }
 
@@ -200,7 +201,25 @@ static void	cli_handle_callbacks(void)
 		if (this->options[i].cb && this->options[i].is_present)
 		{
 			this->options[i].cb(&this->options[i]);
-			this->should_exit = true;
+			this->settings.should_exit = true;
+			if (this->settings.run_cb_only_once)
+				break;
+		}
+	}
+}
+
+static void	cli_sort_options_by_presence(void)
+{
+	for (uint32_t i = 0; i < this->options_size; i++)
+	{
+		for (uint32_t j = i + 1; j < this->options_size; j++)
+		{
+			if (this->options[i].presence_idx > this->options[j].presence_idx)
+			{
+				t_cli_option tmp = this->options[i];
+				this->options[i] = this->options[j];
+				this->options[j] = tmp;
+			}
 		}
 	}
 }
@@ -243,6 +262,7 @@ bool cli_handle_parse(int argc, char **argv)
 		head = head->next;
 	}
 	ft_lstclear(&this->parser.args, NULL);
+	cli_sort_options_by_presence();
 	cli_handle_callbacks();
 	return (true);
 }
