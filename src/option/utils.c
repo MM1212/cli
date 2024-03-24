@@ -6,7 +6,7 @@
 /*   By: martiper <martiper@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 12:54:25 by martiper          #+#    #+#             */
-/*   Updated: 2024/03/24 15:33:45 by martiper         ###   ########.fr       */
+/*   Updated: 2024/03/24 15:53:30 by martiper         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ void	cli_cleanup_option(t_cli_option *option)
 		free(option->variable_hint);
 	if (option->aliases)
 		free(option->aliases);
+	if (option->description_footer)
+		free(option->description_footer);
 	if (option->choices)
 		ft_lstclear(&option->choices, (void (*)(void *))cli_cleanup_option_choice);
 	if (option->value)
