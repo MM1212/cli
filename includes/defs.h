@@ -6,7 +6,7 @@
 /*   By: martiper <martiper@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 11:39:03 by martiper          #+#    #+#             */
-/*   Updated: 2024/03/24 12:56:53 by martiper         ###   ########.fr       */
+/*   Updated: 2024/03/24 15:13:08 by martiper         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,7 @@ struct s_cli_option
 	uint32_t _switches_size;		  // number of switches
 	t_cli_flag *_flags;				  // list of flags for this option
 	uint32_t _flags_size;			  // number of flags
+	char *aliases;					  // list of aliases for this option (comma separated, eg, "-h,--help,--test")
 	t_cli_handle *_handle;			  // handle that owns this option
 };
 
@@ -119,6 +120,7 @@ struct s_cli_option_builder
 	t_cli_option_builder *(*set_description_footer)(char *description_footer);
 	t_cli_option_builder *(*set_default_value)(char *default_value);   // will also call set_flags(CLI_OPTION_FLAG_OPTIONAL)
 	t_cli_option_builder *(*set_variable_hint)(char *variable_hint);   // will also call set_flags(CLI_OPTION_FLAG_OPTIONAL) if has_flags(CLI_OPTION_FLAG_NONE)
+	t_cli_option_builder *(*set_aliases)(char *aliases); // comma separated list of aliases, eg, "-h,--help,--test"
 	t_cli_option_builder *(*add_choice)(char *choice, char **aliases); // will also call set_type(CLI_OPTION_SELECT)
 	t_cli_option_builder *(*add_switch)(char letter);
 	t_cli_option_builder *(*add_flag)(char *name);

@@ -6,7 +6,7 @@
 /*   By: martiper <martiper@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 12:17:05 by martiper          #+#    #+#             */
-/*   Updated: 2024/03/23 23:11:49 by martiper         ###   ########.fr       */
+/*   Updated: 2024/03/24 15:12:55 by martiper         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ t_cli_option_builder	*cli_opt_builder_init(t_cli_handle *handle)
 	this->set_description_footer = cli_opt_builder_set_description_footer;
 	this->set_default_value = cli_opt_builder_set_default_value;
 	this->set_variable_hint = cli_opt_builder_set_variable_hint;
+	this->set_aliases = cli_opt_builder_set_aliases;
 	this->add_choice = cli_opt_builder_add_choice;
 	this->add_switch = cli_opt_builder_add_switch;
 	this->add_flag = cli_opt_builder_add_flag;
@@ -121,6 +122,8 @@ t_cli_option_builder	*cli_opt_builder_set_description(char *description)
 	if (this->_option.description)
 		free(this->_option.description);
 	this->_option.description = ft_strdup(description);
+	if (!this->_option.description)
+		this->_option._handle->set_error(CLI_ERROR_MEMORY);
 	return (this);
 }
 
@@ -129,12 +132,18 @@ t_cli_option_builder	*cli_opt_builder_set_description_footer(char *description_f
 	if (this->_option.description_footer)
 		free(this->_option.description_footer);
 	this->_option.description_footer = ft_strdup(description_footer);
+	if (!this->_option.description_footer)
+		this->_option._handle->set_error(CLI_ERROR_MEMORY);
 	return (this);
 }
 
 t_cli_option_builder	*cli_opt_builder_set_default_value(char *default_value)
 {
+	if (this->_option.default_value)
+		free(this->_option.default_value);
 	this->_option.default_value = ft_strdup(default_value);
+	if (!this->_option.default_value)
+		this->_option._handle->set_error(CLI_ERROR_MEMORY);
 	this->remove_flags(CLI_OPTION_FLAG_REQUIRED)
 		->add_flags(CLI_OPTION_FLAG_OPTIONAL);
 	return (this);
@@ -142,9 +151,23 @@ t_cli_option_builder	*cli_opt_builder_set_default_value(char *default_value)
 
 t_cli_option_builder	*cli_opt_builder_set_variable_hint(char *variable_hint)
 {
+	if (this->_option.variable_hint)
+		free(this->_option.variable_hint);
 	this->_option.variable_hint = ft_strdup(variable_hint);
+	if (!this->_option.variable_hint)
+		this->_option._handle->set_error(CLI_ERROR_MEMORY);
 	if (this->has_flags(CLI_OPTION_FLAG_NONE))
 		this->set_flags(CLI_OPTION_FLAG_OPTIONAL);
+	return (this);
+}
+
+t_cli_option_builder	*cli_opt_builder_set_aliases(char *aliases)
+{
+	if (this->_option.aliases)
+		free(this->_option.aliases);
+	this->_option.aliases = ft_strdup(aliases);
+	if (!this->_option.aliases)
+		this->_option._handle->set_error(CLI_ERROR_MEMORY);
 	return (this);
 }
 
