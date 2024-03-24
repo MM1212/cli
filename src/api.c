@@ -6,7 +6,7 @@
 /*   By: martiper <martiper@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 16:10:33 by martiper          #+#    #+#             */
-/*   Updated: 2024/03/24 12:56:15 by martiper         ###   ########.fr       */
+/*   Updated: 2024/03/24 22:22:30 by martiper         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,7 +147,10 @@ t_cli_option	*cli_handle_get_option_by_switch(char letter)
 
 bool	cli_handle_is_present(const char *name)
 {
-	return (cli_handle_get_option(name) != NULL);
+	t_cli_option* option = cli_handle_get_option(name);
+	if (!option)
+		return (false);
+	return (option->is_present);
 }
 
 char	*cli_handle_get_value(const char *name)
