@@ -6,7 +6,7 @@
 /*   By: martiper <martiper@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 14:05:40 by martiper          #+#    #+#             */
-/*   Updated: 2024/03/24 12:56:56 by martiper         ###   ########.fr       */
+/*   Updated: 2024/03/24 15:16:47 by martiper         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,10 +45,16 @@ static bool parse_option(t_cli_option *option, char *arg, char *key)
 		arg = option->default_value;
 	if (option->type == CLI_OPTION_SELECT)
 	{
-		if (!ft_lstfind(option->choices, (t_lst_find)find_option_choice, arg))
+		t_cli_option_choice *choice = ft_lstfind(option->choices, (t_lst_find)find_option_choice, arg);
+		if (!choice)
 		{
 			this->set_error(CLI_ERROR_INVALID_ARGUMENT, arg ? arg : "", key);
 			return (false);
+		}
+		if (ft_strcmp(choice->slug, arg) != 0)
+		{
+			free(arg);
+			arg = ft_strdup(choice->slug);
 		}
 	}
 	if (option->value)
