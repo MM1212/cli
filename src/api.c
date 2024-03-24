@@ -6,7 +6,7 @@
 /*   By: martiper <martiper@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 16:10:33 by martiper          #+#    #+#             */
-/*   Updated: 2024/03/23 22:44:40 by martiper         ###   ########.fr       */
+/*   Updated: 2024/03/24 12:56:15 by martiper         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 
 #define this (g_cli_handle)
 
-t_cli_handle	*cli_begin(void)
+t_cli_handle	*cli_begin(void* data)
 {
 	ft_bzero(this, sizeof(t_cli_handle));
 	this->free = cli_handle_cleanup;
@@ -35,6 +35,7 @@ t_cli_handle	*cli_begin(void)
 	this->set_error = cli_handle_set_error;
 	this->new_option = cli_handle_new_option;
 	this->parse = cli_handle_parse;
+	this->data = data;
 	this->valid = true;
 	return (this);
 }
