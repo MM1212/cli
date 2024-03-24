@@ -6,7 +6,7 @@
 /*   By: martiper <martiper@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 14:05:40 by martiper          #+#    #+#             */
-/*   Updated: 2024/03/24 15:16:47 by martiper         ###   ########.fr       */
+/*   Updated: 2024/03/24 15:58:43 by martiper         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 
 #define this (g_cli_handle)
 
-static bool find_option_choice(t_cli_option_choice* choice, char* arg)
+static bool find_option_choice(t_cli_option_choice *choice, char *arg)
 {
 	for (uint32_t i = 0; choice->aliases[i]; i++)
 	{
@@ -45,17 +45,15 @@ static bool parse_option(t_cli_option *option, char *arg, char *key)
 		arg = option->default_value;
 	if (option->type == CLI_OPTION_SELECT)
 	{
-		t_cli_option_choice *choice = ft_lstfind(option->choices, (t_lst_find)find_option_choice, arg);
-		if (!choice)
+		t_list *node = ft_lstfind(option->choices, (t_lst_find)find_option_choice, arg);
+		if (!node)
 		{
 			this->set_error(CLI_ERROR_INVALID_ARGUMENT, arg ? arg : "", key);
 			return (false);
 		}
+		t_cli_option_choice *choice = node->content;
 		if (ft_strcmp(choice->slug, arg) != 0)
-		{
-			free(arg);
-			arg = ft_strdup(choice->slug);
-		}
+			arg = choice->slug;
 	}
 	if (option->value)
 		free(option->value);
@@ -65,7 +63,7 @@ static bool parse_option(t_cli_option *option, char *arg, char *key)
 	return (true);
 }
 
-static uint32_t	check_if_flag_is_ambiguous(char *flag, char** options)
+static uint32_t check_if_flag_is_ambiguous(char *flag, char **options)
 {
 	uint32_t count = 0;
 	uint32_t len = ft_strlen(flag);
@@ -88,7 +86,7 @@ static uint32_t	check_if_flag_is_ambiguous(char *flag, char** options)
 					*options = ft_strdup(this->options[i]._flags[j].name);
 				else
 				{
-					char* tmp = *options;
+					char *tmp = *options;
 					*options = ft_strjoin_sep(",", *options, this->options[i]._flags[j].name, NULL);
 					free(tmp);
 				}
@@ -99,9 +97,9 @@ static uint32_t	check_if_flag_is_ambiguous(char *flag, char** options)
 	return (count);
 }
 
-static bool	output_ambiguous_options(char *flag, char *ambiguous_options)
+static bool output_ambiguous_options(char *flag, char *ambiguous_options)
 {
-	char** options = ft_split(ambiguous_options, ",");
+	char **options = ft_split(ambiguous_options, ",");
 	free(ambiguous_options);
 	if (!options)
 	{
@@ -111,7 +109,7 @@ static bool	output_ambiguous_options(char *flag, char *ambiguous_options)
 	}
 	for (uint32_t i = 0; options[i]; i++)
 	{
-		char* tmp = ft_strjoin(3, "'--", options[i], "'");
+		char *tmp = ft_strjoin(3, "'--", options[i], "'");
 		if (!tmp)
 		{
 			ft_split_free(options);
@@ -201,7 +199,7 @@ static bool parse_switch(char *switch_seq, int *i)
 	return (true);
 }
 
-static void	cli_handle_callbacks(void)
+static void cli_handle_callbacks(void)
 {
 	for (uint32_t i = 0; i < this->options_size; i++)
 	{
@@ -214,9 +212,9 @@ static void	cli_handle_callbacks(void)
 	}
 }
 
-static void	cli_sort_options_by_presence(void)
+static void cli_sort_options_by_presence(void)
 {
-	this->options_runtime = ft_calloc(this->options_size, sizeof(t_cli_option*));
+	this->options_runtime = ft_calloc(this->options_size, sizeof(t_cli_option *));
 	if (!this->options_runtime)
 	{
 		this->set_error(CLI_ERROR_MEMORY);
