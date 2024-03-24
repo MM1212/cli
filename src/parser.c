@@ -6,7 +6,7 @@
 /*   By: martiper <martiper@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 14:05:40 by martiper          #+#    #+#             */
-/*   Updated: 2024/03/24 15:58:43 by martiper         ###   ########.fr       */
+/*   Updated: 2024/03/24 22:15:49 by martiper         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ static uint32_t check_if_flag_is_ambiguous(char *flag, char **options)
 	uint32_t count = 0;
 	uint32_t len = ft_strlen(flag);
 	*options = NULL;
+	bool exact_match = false;
 	for (uint32_t i = 0; i < this->options_size; i++)
 	{
 		for (uint32_t j = 0; j < this->options[i]._flags_size; j++)
@@ -80,6 +81,7 @@ static uint32_t check_if_flag_is_ambiguous(char *flag, char **options)
 					if (*options)
 						free(*options);
 					*options = ft_strdup(this->options[i]._flags[j].name);
+					exact_match = true;
 					break;
 				}
 				if (count == 0)
@@ -93,6 +95,8 @@ static uint32_t check_if_flag_is_ambiguous(char *flag, char **options)
 				count++;
 			}
 		}
+		if (exact_match)
+			break;
 	}
 	return (count);
 }
