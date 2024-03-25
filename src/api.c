@@ -6,7 +6,7 @@
 /*   By: martiper <martiper@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 16:10:33 by martiper          #+#    #+#             */
-/*   Updated: 2024/03/25 23:18:00 by martiper         ###   ########.fr       */
+/*   Updated: 2024/03/25 23:28:15 by martiper         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,10 @@
 
 #define this (g_cli_handle)
 
-t_cli_handle *cli_begin(void *data)
+t_cli_handle *cli_begin(const char* program_name, void *data)
 {
 	ft_bzero(this, sizeof(t_cli_handle));
+	this->program_name = program_name;
 	this->free = cli_handle_cleanup;
 	this->is_present = cli_handle_is_present;
 	this->get_value = cli_handle_get_value;
@@ -97,10 +98,10 @@ void cli_handle_set_error(t_cli_error_code code, ...)
 		break;
 	}
 	va_list args;
-	char buffer[1024];
+	char buffer[2048];
 
 	va_start(args, code);
-	ft_vsprintf(buffer, 1024, main_error, args);
+	ft_vsprintf(buffer, 2048, main_error, args);
 	this->error_message = ft_strdup(buffer);
 	va_end(args);
 	this->valid = false;
@@ -185,7 +186,7 @@ int cli_handle_output_error(void)
 	if (this->error_code == 0)
 		return (0);
 
-	ft_fprintf(2, "ft_ls: %s\n", this->error_message);
+	ft_fprintf(2, "%s: %s\n", this->program_name, this->error_message);
 	free(this->error_message);
 	this->error_message = NULL;
 	return (this->error_code);

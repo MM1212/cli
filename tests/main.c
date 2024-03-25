@@ -6,7 +6,7 @@
 /*   By: martiper <martiper@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 16:45:23 by martiper          #+#    #+#             */
-/*   Updated: 2024/03/24 12:57:05 by martiper         ###   ########.fr       */
+/*   Updated: 2024/03/25 23:28:40 by martiper         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int main(int argc, char **av)
 	(void)argc;
 	(void)av;
 
-	t_cli_handle *cli = cli_begin(NULL);
+	t_cli_handle *cli = cli_begin("test",NULL);
 	cli->new_option("help", "Display an help message", true)
 		->add_switch('h')
 		->set_flags(CLI_OPTION_FLAG_OPTIONAL)

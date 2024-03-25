@@ -6,7 +6,7 @@
 /*   By: martiper <martiper@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 14:05:40 by martiper          #+#    #+#             */
-/*   Updated: 2024/03/25 23:18:16 by martiper         ###   ########.fr       */
+/*   Updated: 2024/03/25 23:32:46 by martiper         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,27 @@ static bool find_option_choice(t_cli_option_choice *choice, struct s_find_opt_ch
 	return (false);
 }
 
+static void cli_handle_invalid_arg_iter_choices(t_cli_option_choice *choice, char **valid_args)
+{
+	char *tmp = *valid_args;
+	char aliases[1024];
+	ft_bzero(aliases, sizeof(aliases));
+	ft_sprintf(aliases, 1024, "  - ");
+	for (uint32_t i = 0; choice->aliases[i]; i++)
+	{
+		if (i > 0)
+			ft_strlcat(aliases, ", ", sizeof(aliases));
+		ft_strlcat(aliases, "‘", sizeof(aliases));
+		ft_strlcat(aliases, choice->aliases[i], sizeof(aliases));
+		ft_strlcat(aliases, "’", sizeof(aliases));
+	}
+	if (*valid_args)
+		*valid_args = ft_strjoin_sep("\n", *valid_args, aliases, NULL);
+	else
+		*valid_args = ft_strdup(aliases);
+	free(tmp);
+}
+
 static bool parse_option(t_cli_option *option, char *arg, char *key)
 {
 	if (!option)
@@ -57,7 +78,10 @@ static bool parse_option(t_cli_option *option, char *arg, char *key)
 		t_list *node = ft_lstfind(option->choices, (t_lst_find)find_option_choice, &data);
 		if (!node)
 		{
-			this->set_error(CLI_ERROR_INVALID_ARGUMENT, arg ? arg : "", key);
+			char* valid_args = NULL;
+			ft_lstiter2(option->choices, (t_lst_iter2)cli_handle_invalid_arg_iter_choices, &valid_args);
+			this->set_error(CLI_ERROR_INVALID_ARGUMENT, arg ? arg : "", key, valid_args);
+			free(valid_args);
 			return (false);
 		}
 		t_cli_option_choice *choice = node->content;

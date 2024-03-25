@@ -6,7 +6,7 @@
 /*   By: martiper <martiper@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 11:39:03 by martiper          #+#    #+#             */
-/*   Updated: 2024/03/25 23:01:48 by martiper         ###   ########.fr       */
+/*   Updated: 2024/03/25 23:31:31 by martiper         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ enum e_cli_error_code
 #define CLI_ERROR_MSG_INVALID_OPTION "invalid option -- ‘%s’"
 #define CLI_ERROR_MSG_UNRECOGNIZED_OPTION "unrecognized option -- ‘%s’"
 #define CLI_ERROR_MSG_ARGUMENT_REQUIRED_FOR_OPTION "option ‘%s’ requires an argument"
-#define CLI_ERROR_MSG_INVALID_ARGUMENT "invalid argument ‘%s’ for ‘%s’"
+#define CLI_ERROR_MSG_INVALID_ARGUMENT "invalid argument ‘%s’ for ‘%s’\nValid arguments are:\n%s"
 #define CLI_ERROR_MSG_AMBIGUOUS_OPTION "option ‘--%s’ is ambiguous; possibilities: %s"
 #define CLI_ERROR_MSG_MEMORY "memory error"
 #define CLI_ERROR_MSG_UNKNOWN "unknown error"
@@ -160,6 +160,7 @@ struct s_cli_handle
 	char **args;
 	bool valid;
 	t_cli_error_code error_code;
+	const char* program_name; // not-heap allocated
 	char *error_message; // must be heap allocated
 
 	// internal api
