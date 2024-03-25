@@ -49,7 +49,7 @@ all: $(NAME)
 
 $(NAME): $(OBJ_FILES)
 	@echo "$(TAG) building $(YELLOW)$(NAME)$(RESET).."
-#	@mkdir -p $(dir $@)
+	@mkdir -p $(dir $@)
 #	@mkdir -p $$(dirname $$(ar -t $(LIBFT_ARCH) | xargs) | awk "{print \"$(dir $@)$(LIBFT_PATH)/\""'$$1}' | xargs)
 #	@ar -x $(LIBFT_ARCH) --output="$(dir $@)$(LIBFT_PATH)"
 #	@find $(dir $@)$(LIBFT_PATH) -name '*.o' -exec ar -rcsP $@ {} \;
