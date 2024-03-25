@@ -6,7 +6,7 @@
 /*   By: martiper <martiper@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 14:05:40 by martiper          #+#    #+#             */
-/*   Updated: 2024/03/25 23:03:56 by martiper         ###   ########.fr       */
+/*   Updated: 2024/03/25 23:18:16 by martiper         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,19 @@
 
 #define this (g_cli_handle)
 
-static bool find_option_choice(t_cli_option_choice *choice, char *arg)
+struct s_find_opt_choice
+{
+	char *arg;
+	t_cli_option *option;
+};
+
+static bool find_option_choice(t_cli_option_choice *choice, struct s_find_opt_choice *data)
 {
 	for (uint32_t i = 0; choice->aliases[i]; i++)
 	{
-		if (ft_strcmp(choice->aliases[i], arg) == 0)
+		if (data->option->flags & CLI_OPTION_FLAG_FUZZY)
+			return (ft_wildcard_match(choice->aliases[i], data->arg));
+		if (ft_strcmp(choice->aliases[i], data->arg) == 0)
 			return (true);
 	}
 	return (false);
@@ -45,14 +53,15 @@ static bool parse_option(t_cli_option *option, char *arg, char *key)
 		arg = option->default_value;
 	if (option->type == CLI_OPTION_SELECT)
 	{
-		t_list *node = ft_lstfind(option->choices, (t_lst_find)find_option_choice, arg);
+		struct s_find_opt_choice data = {.arg = arg, .option = option};
+		t_list *node = ft_lstfind(option->choices, (t_lst_find)find_option_choice, &data);
 		if (!node)
 		{
 			this->set_error(CLI_ERROR_INVALID_ARGUMENT, arg ? arg : "", key);
 			return (false);
 		}
 		t_cli_option_choice *choice = node->content;
-		if (ft_strcmp(choice->slug, arg) != 0)
+		if (!(option->flags & CLI_OPTION_FLAG_FUZZY) && ft_strcmp(choice->slug, arg) != 0)
 			arg = choice->slug;
 	}
 	if (option->value)
@@ -73,8 +82,10 @@ static uint32_t check_if_flag_is_ambiguous(char *flag, char **options)
 	{
 		for (uint32_t j = 0; j < this->options[i]._flags_size; j++)
 		{
-			if (this->options[i].flags & CLI_OPTION_FLAG_FUZZY) {
-				if (ft_wildcard_match(this->options[i]._flags[j].name, flag)) {
+			if (this->options[i].flags & CLI_OPTION_FLAG_FUZZY)
+			{
+				if (ft_wildcard_match(this->options[i]._flags[j].name, flag))
+				{
 					if (count == 0)
 						*options = ft_strdup(this->options[i]._flags[j].name);
 					else

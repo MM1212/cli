@@ -6,7 +6,7 @@
 /*   By: martiper <martiper@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 16:10:33 by martiper          #+#    #+#             */
-/*   Updated: 2024/03/24 22:22:30 by martiper         ###   ########.fr       */
+/*   Updated: 2024/03/25 23:18:00 by martiper         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 
 #define this (g_cli_handle)
 
-t_cli_handle	*cli_begin(void* data)
+t_cli_handle *cli_begin(void *data)
 {
 	ft_bzero(this, sizeof(t_cli_handle));
 	this->free = cli_handle_cleanup;
@@ -40,7 +40,7 @@ t_cli_handle	*cli_begin(void* data)
 	return (this);
 }
 
-void	cli_handle_print(void)
+void cli_handle_print(void)
 {
 	ft_printf("CLI Handle:\n");
 	ft_printf("\t- valid: %b\n", this->valid);
@@ -54,7 +54,8 @@ void	cli_handle_print(void)
 	if (this->args)
 	{
 		size_t i;
-		for (i = 0; this->args[i]; i++);
+		for (i = 0; this->args[i]; i++)
+			;
 		ft_printf("\t- arguments[%d]:\n", i);
 		for (i = 0; this->args[i]; i++)
 			ft_printf("\t\t- %s\n", this->args[i]);
@@ -63,7 +64,7 @@ void	cli_handle_print(void)
 		ft_printf("\t- arguments: %s\n", "none");
 }
 
-void	cli_handle_set_error(t_cli_error_code code, ...)
+void cli_handle_set_error(t_cli_error_code code, ...)
 {
 	assert(code != 0 && "Error code must not be 0");
 	this->error_code = code;
@@ -72,31 +73,31 @@ void	cli_handle_set_error(t_cli_error_code code, ...)
 	char *main_error;
 	switch (this->error_code)
 	{
-		case CLI_ERROR_BUILDER_INVALID_OPTION:
-			main_error = CLI_ERROR_MSG_BUILDER_INVALID_OPTION;
-			break;
-		case CLI_ERROR_INVALID_OPTION:
-			main_error = CLI_ERROR_MSG_INVALID_OPTION;
-			break;
-		case CLI_ERROR_UNRECOGNIZED_OPTION:
-			main_error = CLI_ERROR_MSG_UNRECOGNIZED_OPTION;
-			break;
-		case CLI_ERROR_ARGUMENT_REQUIRED_FOR_OPTION:
-			main_error = CLI_ERROR_MSG_ARGUMENT_REQUIRED_FOR_OPTION;
-			break;
-		case CLI_ERROR_INVALID_ARGUMENT:
-			main_error = CLI_ERROR_MSG_INVALID_ARGUMENT;
-			break;
-		case CLI_ERROR_AMBIGUOUS_OPTION:
-			main_error = CLI_ERROR_MSG_AMBIGUOUS_OPTION;
-			break;
-		case CLI_ERROR_UNKNOWN:
-		default:
-			main_error = CLI_ERROR_MSG_UNKNOWN;
-			break;
+	case CLI_ERROR_BUILDER_INVALID_OPTION:
+		main_error = CLI_ERROR_MSG_BUILDER_INVALID_OPTION;
+		break;
+	case CLI_ERROR_INVALID_OPTION:
+		main_error = CLI_ERROR_MSG_INVALID_OPTION;
+		break;
+	case CLI_ERROR_UNRECOGNIZED_OPTION:
+		main_error = CLI_ERROR_MSG_UNRECOGNIZED_OPTION;
+		break;
+	case CLI_ERROR_ARGUMENT_REQUIRED_FOR_OPTION:
+		main_error = CLI_ERROR_MSG_ARGUMENT_REQUIRED_FOR_OPTION;
+		break;
+	case CLI_ERROR_INVALID_ARGUMENT:
+		main_error = CLI_ERROR_MSG_INVALID_ARGUMENT;
+		break;
+	case CLI_ERROR_AMBIGUOUS_OPTION:
+		main_error = CLI_ERROR_MSG_AMBIGUOUS_OPTION;
+		break;
+	case CLI_ERROR_UNKNOWN:
+	default:
+		main_error = CLI_ERROR_MSG_UNKNOWN;
+		break;
 	}
 	va_list args;
-	char	buffer[1024];
+	char buffer[1024];
 
 	va_start(args, code);
 	ft_vsprintf(buffer, 1024, main_error, args);
@@ -105,11 +106,7 @@ void	cli_handle_set_error(t_cli_error_code code, ...)
 	this->valid = false;
 }
 
-
-
-
-
-t_cli_option	*cli_handle_get_option(const char *name)
+t_cli_option *cli_handle_get_option(const char *name)
 {
 	for (uint32_t i = 0; i < this->options_size; i++)
 	{
@@ -119,7 +116,7 @@ t_cli_option	*cli_handle_get_option(const char *name)
 	return (NULL);
 }
 
-t_cli_option	*cli_handle_get_option_by_flag(const char *flag)
+t_cli_option *cli_handle_get_option_by_flag(const char *flag)
 {
 	if (!this->options)
 		return (NULL);
@@ -127,14 +124,19 @@ t_cli_option	*cli_handle_get_option_by_flag(const char *flag)
 	{
 		for (uint32_t j = 0; j < this->options[i]._flags_size; j++)
 		{
-			if (ft_strcmp(this->options[i]._flags[j].name, flag) == 0)
+			if (this->options->flags & CLI_OPTION_FLAG_FUZZY)
+			{
+				if (ft_wildcard_match(this->options[i]._flags[j].name, flag))
+					return (&this->options[i]);
+			}
+			else if (ft_strcmp(this->options[i]._flags[j].name, flag) == 0)
 				return (&this->options[i]);
 		}
 	}
 	return (NULL);
 }
 
-t_cli_option	*cli_handle_get_option_by_switch(char letter)
+t_cli_option *cli_handle_get_option_by_switch(char letter)
 {
 	for (uint32_t i = 0; i < this->options_size; i++)
 		for (uint32_t j = 0; j < this->options[i]._switches_size; j++)
@@ -145,15 +147,15 @@ t_cli_option	*cli_handle_get_option_by_switch(char letter)
 	return (NULL);
 }
 
-bool	cli_handle_is_present(const char *name)
+bool cli_handle_is_present(const char *name)
 {
-	t_cli_option* option = cli_handle_get_option(name);
+	t_cli_option *option = cli_handle_get_option(name);
 	if (!option)
 		return (false);
 	return (option->is_present);
 }
 
-char	*cli_handle_get_value(const char *name)
+char *cli_handle_get_value(const char *name)
 {
 	t_cli_option *option = cli_handle_get_option(name);
 	if (option)
@@ -161,7 +163,7 @@ char	*cli_handle_get_value(const char *name)
 	return (NULL);
 }
 
-void	cli_handle_cleanup(void)
+void cli_handle_cleanup(void)
 {
 	if (this->error_message)
 		free(this->error_message);
@@ -173,12 +175,12 @@ void	cli_handle_cleanup(void)
 	ft_bzero(this, sizeof(t_cli_handle));
 }
 
-bool	cli_handle_is_valid(void)
+bool cli_handle_is_valid(void)
 {
 	return (this->valid);
 }
 
-int	cli_handle_output_error(void)
+int cli_handle_output_error(void)
 {
 	if (this->error_code == 0)
 		return (0);
@@ -189,13 +191,13 @@ int	cli_handle_output_error(void)
 	return (this->error_code);
 }
 
-t_cli_option_builder	*cli_handle_new_option(const char *slug, const char *desc, bool add_as_flag)
+t_cli_option_builder *cli_handle_new_option(const char *slug, const char *desc, bool add_as_flag)
 {
 	t_cli_option_builder *builder = cli_opt_builder_init(this);
 	builder->_option.slug = ft_strdup(slug);
 	builder->set_description((char *)desc);
 	builder->set_flags(CLI_OPTION_FLAG_NONE);
 	if (add_as_flag)
-		builder->add_flag((char*)slug);
+		builder->add_flag((char *)slug);
 	return (builder);
 }
