@@ -6,7 +6,7 @@
 /*   By: martiper <martiper@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 11:39:03 by martiper          #+#    #+#             */
-/*   Updated: 2024/03/24 15:13:08 by martiper         ###   ########.fr       */
+/*   Updated: 2024/03/25 23:01:48 by martiper         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ enum e_cli_option_flag
 	CLI_OPTION_FLAG_NONE = 1,	  // does not take any argument (if given, will add to program args)
 	CLI_OPTION_FLAG_OPTIONAL = 2, // does not require an argument
 	CLI_OPTION_FLAG_REQUIRED = 4, // must have an argument
-	CLI_OPTION_FLAG_HIDDEN = 8	  // not displayed in help
+	CLI_OPTION_FLAG_FUZZY = 8	  // will try to match with wildcards
 };
 
 enum e_cli_error_code
