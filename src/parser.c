@@ -6,7 +6,7 @@
 /*   By: martiper <martiper@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 14:05:40 by martiper          #+#    #+#             */
-/*   Updated: 2024/03/28 15:23:03 by martiper         ###   ########.fr       */
+/*   Updated: 2024/03/28 17:35:29 by martiper         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -260,7 +260,7 @@ static bool parse_switch(char *switch_seq, int *i)
 				switch_seq++;
 			}
 			else
-				switch_seq += ft_strlen(arg);
+				switch_seq += ft_strlen(arg) + 1;
 			is_valid = parse_option(option, arg, switch_str);
 		}
 		free(switch_str);
