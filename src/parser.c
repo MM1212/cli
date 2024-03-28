@@ -6,7 +6,7 @@
 /*   By: martiper <martiper@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 14:05:40 by martiper          #+#    #+#             */
-/*   Updated: 2024/03/25 23:32:46 by martiper         ###   ########.fr       */
+/*   Updated: 2024/03/28 15:23:03 by martiper         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,25 @@ static bool parse_option(t_cli_option *option, char *arg, char *key)
 		t_cli_option_choice *choice = node->content;
 		if (!(option->flags & CLI_OPTION_FLAG_FUZZY) && ft_strcmp(choice->slug, arg) != 0)
 			arg = choice->slug;
+	}
+	if (
+		arg &&
+		(
+			(option->flags & CLI_OPTION_FLAG_SIGNED && !ft_isnbr(arg, true, false)) ||
+			(option->flags & CLI_OPTION_FLAG_UNSIGNED && !ft_isnbr(arg, false, false)) ||
+			(option->flags & CLI_OPTION_FLAG_FLOAT && !ft_isnbr(arg, true, true))
+		)
+	) {
+		ft_printf("arg: %s\n", arg);
+		char* expected = NULL;
+		if (option->flags & CLI_OPTION_FLAG_SIGNED)
+			expected = "number";
+		else if (option->flags & CLI_OPTION_FLAG_UNSIGNED)
+			expected = "unumber";
+		else if (option->flags & CLI_OPTION_FLAG_FLOAT)
+			expected = "float";
+		this->set_error(CLI_ERROR_UNEXPECTED_ARGUMENT, arg ? arg : "", expected);
+		return (false);
 	}
 	if (option->value)
 		free(option->value);

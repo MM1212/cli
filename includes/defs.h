@@ -6,7 +6,7 @@
 /*   By: martiper <martiper@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 11:39:03 by martiper          #+#    #+#             */
-/*   Updated: 2024/03/25 23:31:31 by martiper         ###   ########.fr       */
+/*   Updated: 2024/03/28 15:14:04 by martiper         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,10 +50,13 @@ enum e_cli_option_type
 
 enum e_cli_option_flag
 {
-	CLI_OPTION_FLAG_NONE = 1,	  // does not take any argument (if given, will add to program args)
+	CLI_OPTION_FLAG_NONE = 1,   // does not take any argument (if given, will add to program args)
 	CLI_OPTION_FLAG_OPTIONAL = 2, // does not require an argument
 	CLI_OPTION_FLAG_REQUIRED = 4, // must have an argument
-	CLI_OPTION_FLAG_FUZZY = 8	  // will try to match with wildcards
+	CLI_OPTION_FLAG_FUZZY = 8,   // will try to match with wildcards
+	CLI_OPTION_FLAG_SIGNED = 16,    // argument must be a number
+	CLI_OPTION_FLAG_UNSIGNED = 32, // argument must be an unsigned number
+	CLI_OPTION_FLAG_FLOAT = 64, // argument must be a float
 };
 
 enum e_cli_error_code
@@ -64,6 +67,7 @@ enum e_cli_error_code
 	CLI_ERROR_UNRECOGNIZED_OPTION,
 	CLI_ERROR_ARGUMENT_REQUIRED_FOR_OPTION,
 	CLI_ERROR_INVALID_ARGUMENT,
+	CLI_ERROR_UNEXPECTED_ARGUMENT,
 	CLI_ERROR_AMBIGUOUS_OPTION,
 	CLI_ERROR_MEMORY,
 	CLI_ERROR_UNKNOWN
@@ -74,6 +78,7 @@ enum e_cli_error_code
 #define CLI_ERROR_MSG_UNRECOGNIZED_OPTION "unrecognized option -- ‘%s’"
 #define CLI_ERROR_MSG_ARGUMENT_REQUIRED_FOR_OPTION "option ‘%s’ requires an argument"
 #define CLI_ERROR_MSG_INVALID_ARGUMENT "invalid argument ‘%s’ for ‘%s’\nValid arguments are:\n%s"
+#define CLI_ERROR_MSG_UNEXPECTED_ARGUMENT "invalid argument ‘%s’, expected ‘%s’"
 #define CLI_ERROR_MSG_AMBIGUOUS_OPTION "option ‘--%s’ is ambiguous; possibilities: %s"
 #define CLI_ERROR_MSG_MEMORY "memory error"
 #define CLI_ERROR_MSG_UNKNOWN "unknown error"

@@ -6,7 +6,7 @@
 /*   By: martiper <martiper@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 16:45:23 by martiper          #+#    #+#             */
-/*   Updated: 2024/03/25 23:28:40 by martiper         ###   ########.fr       */
+/*   Updated: 2024/03/28 15:14:06 by martiper         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int main(int argc, char **av)
 	t_cli_handle *cli = cli_begin("test",NULL);
 	cli->new_option("help", "Display an help message", true)
 		->add_switch('h')
-		->set_flags(CLI_OPTION_FLAG_OPTIONAL)
+		->add_flags(CLI_OPTION_FLAG_OPTIONAL | CLI_OPTION_FLAG_FLOAT)
 		->set_type(CLI_OPTION_INPUT)
 		->end();
 	cli->new_option("color", "Enable color output", true)
