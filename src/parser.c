@@ -6,7 +6,7 @@
 /*   By: martiper <martiper@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 14:05:40 by martiper          #+#    #+#             */
-/*   Updated: 2024/03/28 17:35:29 by martiper         ###   ########.fr       */
+/*   Updated: 2024/03/29 16:02:11 by martiper         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,6 @@ static bool parse_option(t_cli_option *option, char *arg, char *key)
 			(option->flags & CLI_OPTION_FLAG_FLOAT && !ft_isnbr(arg, true, true))
 		)
 	) {
-		ft_printf("arg: %s\n", arg);
 		char* expected = NULL;
 		if (option->flags & CLI_OPTION_FLAG_SIGNED)
 			expected = "number";
