@@ -6,7 +6,7 @@
 /*   By: martiper <martiper@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 12:14:40 by martiper          #+#    #+#             */
-/*   Updated: 2024/03/25 23:00:50 by martiper         ###   ########.fr       */
+/*   Updated: 2024/03/29 22:16:14 by martiper         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ t_cli_option_builder	*cli_opt_builder_set_flags(int flags);
 t_cli_option_builder	*cli_opt_builder_add_flags(int flags);
 t_cli_option_builder	*cli_opt_builder_remove_flags(int flags);
 bool					cli_opt_builder_has_flags(int flags);
+t_cli_option_builder	*cli_opt_builder_allow_multiple_values(bool enabled, char sep);
 t_cli_option_builder	*cli_opt_builder_set_description(char *description);
 t_cli_option_builder	*cli_opt_builder_set_description_footer(char *description);
 t_cli_option_builder	*cli_opt_builder_set_default_value(char *default_value);

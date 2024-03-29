@@ -6,7 +6,7 @@
 /*   By: martiper <martiper@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 12:17:05 by martiper          #+#    #+#             */
-/*   Updated: 2024/03/25 23:01:53 by martiper         ###   ########.fr       */
+/*   Updated: 2024/03/29 22:13:57 by martiper         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,9 @@ t_cli_option_builder	*cli_opt_builder_init(t_cli_handle *handle)
 	this->add_flags = cli_opt_builder_add_flags;
 	this->remove_flags = cli_opt_builder_remove_flags;
 	this->has_flags = cli_opt_builder_has_flags;
+	this->set_fuzzy = cli_opt_builder_set_fuzzy;
 	this->set_description = cli_opt_builder_set_description;
+	this->allow_multiple_values = cli_opt_builder_allow_multiple_values;
 	this->set_description_footer = cli_opt_builder_set_description_footer;
 	this->set_default_value = cli_opt_builder_set_default_value;
 	this->set_variable_hint = cli_opt_builder_set_variable_hint;
@@ -81,6 +83,7 @@ t_cli_option_builder	*cli_opt_builder_reset(void)
 	cli_cleanup_option(&this->_option);
 	ft_bzero(&this->_option, sizeof(t_cli_option));
 	this->_option._handle = handle;
+	this->_option.multiple_values_byte = ',';
 	return (this);
 }
 
@@ -115,6 +118,25 @@ t_cli_option_builder	*cli_opt_builder_remove_flags(int flags)
 bool	cli_opt_builder_has_flags(int flags)
 {
 	return ((this->_option.flags & flags) == flags);
+}
+
+t_cli_option_builder	*cli_opt_builder_set_fuzzy(bool fuzzy)
+{
+	if (fuzzy)
+		this->add_flags(CLI_OPTION_FLAG_FUZZY);
+	else
+		this->remove_flags(CLI_OPTION_FLAG_FUZZY);
+	return (this);
+}
+
+t_cli_option_builder	*cli_opt_builder_allow_multiple_values(bool enabled, char byte)
+{
+	this->_option.multiple_values_byte = byte;
+	if (enabled)
+		this->add_flags(CLI_OPTION_FLAG_MULTIPLE_VALUES);
+	else
+		this->remove_flags(CLI_OPTION_FLAG_MULTIPLE_VALUES);
+	return (this);
 }
 
 t_cli_option_builder	*cli_opt_builder_set_description(char *description)

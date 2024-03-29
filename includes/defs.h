@@ -6,7 +6,7 @@
 /*   By: martiper <martiper@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 11:39:03 by martiper          #+#    #+#             */
-/*   Updated: 2024/03/28 15:14:04 by martiper         ###   ########.fr       */
+/*   Updated: 2024/03/29 22:13:50 by martiper         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ enum e_cli_option_flag
 	CLI_OPTION_FLAG_SIGNED = 16,    // argument must be a number
 	CLI_OPTION_FLAG_UNSIGNED = 32, // argument must be an unsigned number
 	CLI_OPTION_FLAG_FLOAT = 64, // argument must be a float
+	CLI_OPTION_FLAG_MULTIPLE_VALUES = 128, // if the option appears multiple times, will join the values by a sep (default is ",")
 };
 
 enum e_cli_error_code
@@ -99,6 +100,8 @@ struct s_cli_option
 	char *default_value;	  // default value if not provided (is_present(...) will always return true if default is set)
 	char *variable_hint;	  // hint for flag when receives an argument
 	t_list *choices;		  // list of choices for select type
+	char multiple_values_byte; // if multiple values are provided, will join them by this byte
+
 	// runtime values
 	bool is_present;	   // if the option was provided by user
 	uint32_t presence_idx; // index of the option that was provided by user
@@ -121,6 +124,8 @@ struct s_cli_option_builder
 	t_cli_option_builder *(*add_flags)(int flags);
 	t_cli_option_builder *(*remove_flags)(int flags);
 	bool (*has_flags)(int flags);
+	t_cli_option_builder *(*set_fuzzy)(bool fuzzy);
+	t_cli_option_builder *(*allow_multiple_values)(bool enabled, char byte);
 	t_cli_option_builder *(*set_description)(char *description);
 	t_cli_option_builder *(*set_description_footer)(char *description_footer);
 	t_cli_option_builder *(*set_default_value)(char *default_value);   // will also call set_flags(CLI_OPTION_FLAG_OPTIONAL)

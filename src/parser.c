@@ -6,7 +6,7 @@
 /*   By: martiper <martiper@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 14:05:40 by martiper          #+#    #+#             */
-/*   Updated: 2024/03/29 16:02:11 by martiper         ###   ########.fr       */
+/*   Updated: 2024/03/29 22:15:42 by martiper         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ static bool parse_option(t_cli_option *option, char *arg, char *key)
 		t_list *node = ft_lstfind(option->choices, (t_lst_find)find_option_choice, &data);
 		if (!node)
 		{
-			char* valid_args = NULL;
+			char *valid_args = NULL;
 			ft_lstiter2(option->choices, (t_lst_iter2)cli_handle_invalid_arg_iter_choices, &valid_args);
 			this->set_error(CLI_ERROR_INVALID_ARGUMENT, arg ? arg : "", key, valid_args);
 			free(valid_args);
@@ -90,13 +90,11 @@ static bool parse_option(t_cli_option *option, char *arg, char *key)
 	}
 	if (
 		arg &&
-		(
-			(option->flags & CLI_OPTION_FLAG_SIGNED && !ft_isnbr(arg, true, false)) ||
-			(option->flags & CLI_OPTION_FLAG_UNSIGNED && !ft_isnbr(arg, false, false)) ||
-			(option->flags & CLI_OPTION_FLAG_FLOAT && !ft_isnbr(arg, true, true))
-		)
-	) {
-		char* expected = NULL;
+		((option->flags & CLI_OPTION_FLAG_SIGNED && !ft_isnbr(arg, true, false)) ||
+		 (option->flags & CLI_OPTION_FLAG_UNSIGNED && !ft_isnbr(arg, false, false)) ||
+		 (option->flags & CLI_OPTION_FLAG_FLOAT && !ft_isnbr(arg, true, true))))
+	{
+		char *expected = NULL;
 		if (option->flags & CLI_OPTION_FLAG_SIGNED)
 			expected = "number";
 		else if (option->flags & CLI_OPTION_FLAG_UNSIGNED)
@@ -106,9 +104,24 @@ static bool parse_option(t_cli_option *option, char *arg, char *key)
 		this->set_error(CLI_ERROR_UNEXPECTED_ARGUMENT, arg ? arg : "", expected);
 		return (false);
 	}
-	if (option->value)
-		free(option->value);
-	option->value = ft_strdup(arg);
+	if (option->flags & CLI_OPTION_FLAG_MULTIPLE_VALUES)
+	{
+		if (!option->value)
+			option->value = ft_strdup(arg);
+		else
+		{
+			char *tmp = option->value;
+			char sep[2] = {option->multiple_values_byte, '\0'};
+			option->value = ft_strjoin_sep(sep, option->value, arg, NULL);
+			free(tmp);
+		}
+	}
+	else
+	{
+		if (option->value)
+			free(option->value);
+		option->value = ft_strdup(arg);
+	}
 	option->is_present = true;
 	option->presence_idx = ++this->parser.option_counter;
 	return (true);
