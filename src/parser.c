@@ -6,7 +6,7 @@
 /*   By: martiper <martiper@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 14:05:40 by martiper          #+#    #+#             */
-/*   Updated: 2024/03/29 22:15:42 by martiper         ###   ########.fr       */
+/*   Updated: 2024/03/31 10:57:06 by martiper         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,11 @@ static bool find_option_choice(t_cli_option_choice *choice, struct s_find_opt_ch
 	for (uint32_t i = 0; choice->aliases[i]; i++)
 	{
 		if (data->option->flags & CLI_OPTION_FLAG_FUZZY)
-			return (ft_wildcard_match(choice->aliases[i], data->arg));
-		if (ft_strcmp(choice->aliases[i], data->arg) == 0)
+		{
+			if (ft_wildcard_match(choice->aliases[i], data->arg))
+				return (true);
+		}
+		else if (ft_strcmp(choice->aliases[i], data->arg) == 0)
 			return (true);
 	}
 	return (false);
