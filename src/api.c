@@ -6,7 +6,7 @@
 /*   By: martiper <martiper@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 16:10:33 by martiper          #+#    #+#             */
-/*   Updated: 2024/03/28 15:25:03 by martiper         ###   ########.fr       */
+/*   Updated: 2024/03/31 11:03:57 by martiper         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,8 +86,11 @@ void cli_handle_set_error(t_cli_error_code code, ...)
 	case CLI_ERROR_ARGUMENT_REQUIRED_FOR_OPTION:
 		main_error = CLI_ERROR_MSG_ARGUMENT_REQUIRED_FOR_OPTION;
 		break;
-	case CLI_ERROR_INVALID_ARGUMENT:
-		main_error = CLI_ERROR_MSG_INVALID_ARGUMENT;
+	case CLI_ERROR_INVALID_CHOICE_ARGUMENT:
+		main_error = CLI_ERROR_MSG_INVALID_CHOICE_ARGUMENT;
+		break;
+	case CLI_ERROR_INVALID_GENERIC_ARGUMENT:
+		main_error = CLI_ERROR_MSG_INVALID_GENERIC_ARGUMENT;
 		break;
 	case CLI_ERROR_UNEXPECTED_ARGUMENT:
 		main_error = CLI_ERROR_MSG_UNEXPECTED_ARGUMENT;

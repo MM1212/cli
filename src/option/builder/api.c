@@ -6,7 +6,7 @@
 /*   By: martiper <martiper@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 12:17:05 by martiper          #+#    #+#             */
-/*   Updated: 2024/03/29 22:13:57 by martiper         ###   ########.fr       */
+/*   Updated: 2024/03/31 11:02:04 by martiper         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ t_cli_option_builder	*cli_opt_builder_init(t_cli_handle *handle)
 	this->reset = cli_opt_builder_reset;
 	this->end = cli_opt_builder_end;
 	this->set_cb = cli_opt_builder_set_cb;
+	this->set_custom_validator = cli_opt_builder_set_custom_validator;
 	this->reset();
 	this->_option._handle = handle;
 
@@ -285,5 +286,11 @@ bool	cli_opt_builder_is_valid(void)
 t_cli_option_builder*	cli_opt_builder_set_cb(t_cli_option_cb cb)
 {
 	this->_option.cb = cb;
+	return (this);
+}
+
+t_cli_option_builder* cli_opt_builder_set_custom_validator(t_cli_option_validator validator)
+{
+	this->_option.validator = validator;
 	return (this);
 }

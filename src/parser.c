@@ -6,7 +6,7 @@
 /*   By: martiper <martiper@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 14:05:40 by martiper          #+#    #+#             */
-/*   Updated: 2024/03/31 10:57:06 by martiper         ###   ########.fr       */
+/*   Updated: 2024/03/31 11:04:40 by martiper         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ static bool parse_option(t_cli_option *option, char *arg, char *key)
 		{
 			char *valid_args = NULL;
 			ft_lstiter2(option->choices, (t_lst_iter2)cli_handle_invalid_arg_iter_choices, &valid_args);
-			this->set_error(CLI_ERROR_INVALID_ARGUMENT, arg ? arg : "", key, valid_args);
+			this->set_error(CLI_ERROR_INVALID_CHOICE_ARGUMENT, arg ? arg : "", key, valid_args);
 			free(valid_args);
 			return (false);
 		}
@@ -105,6 +105,11 @@ static bool parse_option(t_cli_option *option, char *arg, char *key)
 		else if (option->flags & CLI_OPTION_FLAG_FLOAT)
 			expected = "float";
 		this->set_error(CLI_ERROR_UNEXPECTED_ARGUMENT, arg ? arg : "", expected);
+		return (false);
+	}
+	if (option->validator && !option->validator(option, arg))
+	{
+		this->set_error(CLI_ERROR_INVALID_GENERIC_ARGUMENT, key, arg ? arg : "");
 		return (false);
 	}
 	if (option->flags & CLI_OPTION_FLAG_MULTIPLE_VALUES)
