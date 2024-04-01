@@ -6,7 +6,7 @@
 /*   By: martiper <martiper@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 14:05:40 by martiper          #+#    #+#             */
-/*   Updated: 2024/03/31 11:04:40 by martiper         ###   ########.fr       */
+/*   Updated: 2024/04/01 15:58:39 by martiper         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -343,7 +343,8 @@ bool cli_handle_parse(int argc, char **argv)
 		{
 			if (is_only_flag)
 				add_all_as_args = true;
-			ft_lstadd_back(&this->parser.args, ft_lstnew(argv[i]));
+			else
+				ft_lstadd_back(&this->parser.args, ft_lstnew(argv[i]));
 			continue;
 		}
 		valid = is_flag ? parse_flag(argv[i]) : parse_switch(argv[i], &i);
